@@ -2,7 +2,7 @@ from Admins import admin_list
 from TOKEN import Token
 import telebot
 from telebot import types
-import sqlite3
+
 
 bot = telebot.TeleBot(Token.TOKEN)
 admins = admin_list.admin_id
