@@ -2,6 +2,7 @@ from Admins import admin_list
 from TOKEN import Token
 import telebot
 from telebot import types
+import sqlite3
 
 bot = telebot.TeleBot(Token.TOKEN)
 admins = admin_list.admin_id
@@ -18,6 +19,7 @@ inline_keyboard_student_button_1 = types.InlineKeyboardButton('Узнать ра
 inline_keyboard_student_button_2 = types.InlineKeyboardButton('Получить материалы уроков', callback_data='lesson_materials_student')
 inline_keyboard_student_button_3 = types.InlineKeyboardButton('Вернуться в главное меню', callback_data='main_menu')
 inline_keyboard_student.add(inline_keyboard_student_button_1).add(inline_keyboard_student_button_2).add(inline_keyboard_student_button_3)
+
 
 class Commands:
     @bot.message_handler(commands=['start'])
