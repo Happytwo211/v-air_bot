@@ -75,7 +75,8 @@ class DataBaseCallBack:
     def schedule_student(call):
         message = call.message
         db_data = cursor.execute('SELECT * FROM Groups ORDER BY "Group_Name"')
-        bot.send_message(message.chat.id, f'Расписание группы-1\n{(db_data)}')
+        formated_data = '\n'.join([' '.join(map(str, row)) for row in db_data])
+        bot.send_message(message.chat.id, f'Расписание группы-1\n{(formated_data)}')
 
 class TutorCallBackData:
     pass
