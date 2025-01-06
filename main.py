@@ -1,7 +1,16 @@
 from Admins import admin_list
 from TOKEN import Token
-import telebot
 from telebot import types
+import os
+import telebot
+import sqlite3
+
+
+
+db_path = os.path.join(os.getcwd(), 'DB/Groups.db')
+connection = sqlite3.connect(db_path, check_same_thread=False)
+cursor = connection.cursor()
+
 
 
 bot = telebot.TeleBot(Token.TOKEN)
@@ -21,6 +30,7 @@ inline_keyboard_student_button_3 = types.InlineKeyboardButton('Вернутьс�
 inline_keyboard_student.add(inline_keyboard_student_button_1).add(inline_keyboard_student_button_2).add(inline_keyboard_student_button_3)
 
 
+
 class Commands:
     @bot.message_handler(commands=['start'])
     def handle_start(message):
@@ -28,7 +38,16 @@ class Commands:
                        f'Это бот проекта ~V-Air~'
                        f'\n', reply_markup=inline_keyboard_student_admin)
 
+    @bot.message_handler(commands=['db'])
+    def db_test(message):
+        cursor.execute('SELECT * FROM Groups')
+        rows = cursor.fetchall()
+        data_message = "\n".join([f"{row}" for row in rows])
+        bot.send_message(message.chat.id, f'Вот твое расписание\n {data_message}')
 
+    # @bot.message_handler(commands=['db'])
+    # def db_test(message):
+    #     bot.send_message(message.chat.id, f'{db_commands.List.list_table()}')
 class StudentCallBackData:
     @bot.callback_query_handler(func=lambda call: call.data == 'student')
     def student(call):
@@ -53,4 +72,5 @@ class StudentCallBackData:
 class TutorCallBackData:
     pass
 
-bot.infinity_polling()
+if __name__ == '__main__':
+    bot.infinity_polling()

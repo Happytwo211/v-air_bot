@@ -1,18 +1,23 @@
 import sqlite3
 
-connection = sqlite3.connect('Groups.db')
+connection = sqlite3.connect('Groups.db',check_same_thread=False)
 cursor = connection.cursor()
 
-class TableGroupsDB:
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS Groups (
-        Group_Name TEXT PRIMARY KEY,
-        Week TEXT ,
-        Day TEXT ,
-        Year TEXT
-    );
-    ''')
+# class TableGroupsDB:
+#     cursor.execute('''
+#     CREATE TABLE IF NOT EXISTS Groups (
+#         Group_Name TEXT PRIMARY KEY,
+#         Week TEXT ,
+#         Day TEXT ,
+#         Year TEXT
+#     );
+#     ''')
 class AddValue:
+
+    def add_table_value(Group_Name, Week, Day, Year):
+        cursor.execute(
+            'INSERT INTO Groups (Group_Name, Week, Day, Year) VAlUES (?,?,?,?)', (Group_Name,Week,Day,Year)
+        )
     def add_group_name(Group_Name):
         cursor.execute(
             'INSERT INTO Groups (Group_Name) VAlUES (?)', (Group_Name,)
@@ -38,10 +43,10 @@ class List:
     @staticmethod
     def list_table():
       cursor.execute('SELECT * FROM Groups')
-      tasks = cursor.fetchall()
-      for task in tasks:
-        print(task)
-
+      table = cursor.fetchall()
+      for cells in table:
+        print(cells)
+        return
 class Delete:
     def delete_group_name(Group_name):
         cursor.execute(
@@ -68,5 +73,7 @@ class Delete:
         connection.commit()
 
 
+
+List.list_table()
 connection.commit()
 connection.close()
