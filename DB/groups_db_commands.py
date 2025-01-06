@@ -13,6 +13,7 @@ class TableGroupsDB:
         Year TEXT
     );
     ''')
+
 class AddValue:
 
     def add_table_value(Group_Name, Week, Day, Year):
@@ -75,20 +76,7 @@ class List:
 
 class Delete:
 
-    def table_string(Group_name, Week, Day, Year):
-        cursor.execute(
-            f'DELETE FROM Groups WHERE Group_name = {Group_name}'
-        )
-        cursor.execute(
-            f'DELETE FROM Groups WHERE Week = {Week}'
-        )
-        cursor.execute(
-            f'DELETE FROM Groups WHERE Day = {Day}'
-        )
-        cursor.execute(
-            f'DELETE FROM Groups WHERE Year = {Year}'
-        )
-        # return f'{test}'
+
 
     def delete_group_name(Group_name):
         cursor.execute(
@@ -113,7 +101,6 @@ class Delete:
             'DELETE FROM Groups WHERE Year == ?', (Year,)
         )
         connection.commit()
-
 
 
 
