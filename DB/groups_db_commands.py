@@ -1,26 +1,25 @@
 import sqlite3
-import cmd
+
 connection = sqlite3.connect('Groups.db',check_same_thread=False)
 cursor = connection.cursor()
 
-# class TableGroupsDB:
-#     cursor.execute('''
-#     CREATE TABLE IF NOT EXISTS Groups (
-#         Group_Name TEXT PRIMARY KEY,
-#         Week TEXT ,
-#         Day TEXT ,
-#         Year TEXT
-#     );
-#     ''')
+class TableGroupsDB:
+    pass
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS Groups (
+        Group_Name TEXT PRIMARY KEY,
+        Week TEXT ,
+        Day TEXT ,
+        Year TEXT
+    );
+    ''')
 class AddValue:
 
     def add_table_value(Group_Name, Week, Day, Year):
-
         print(
             f'Вы хотите внести в таблицу:'
             f'Group_Name = {Group_Name}, Week = {Week}, Day = {Day}, Year = {Year}'
             )
-
         print(
             f'Вы подверждаете изменение данных?'
             f'"y" = yes, "n" = no'
@@ -29,7 +28,6 @@ class AddValue:
 
         if user_input == 'y':
             try:
-
                 cursor.execute(
                     'INSERT INTO Groups (Group_Name, Week, Day, Year) VAlUES (?,?,?,?)', (Group_Name, Week, Day, Year)
                 )
@@ -37,16 +35,11 @@ class AddValue:
                 print('Данные внесены')
 
             except:
-
                 sqlite3.IntegrityError
                 print('Данные не уникальны')
 
-
         if user_input == 'n':
             print('Данные не внесены')
-
-
-
 
     def add_group_name(Group_Name):
         cursor.execute(
@@ -70,6 +63,7 @@ class AddValue:
         connection.commit()
 
 class List:
+
     @staticmethod
     def list_table():
       cursor.execute('SELECT * FROM Groups')
@@ -77,6 +71,7 @@ class List:
       for cells in table:
         print(cells)
         return
+
 
 class Delete:
 
@@ -119,7 +114,7 @@ class Delete:
         )
         connection.commit()
 
-AddValue.add_table_value(Group_Name='test5', Week='test5', Day='test4', Year='test4')
+
 
 
 # List.list_table()
