@@ -45,9 +45,6 @@ class Commands:
         data_message = "\n".join([f"{row}" for row in rows])
         bot.send_message(message.chat.id, f'Вот твое расписание\n {data_message}')
 
-    # @bot.message_handler(commands=['db'])
-    # def db_test(message):
-    #     bot.send_message(message.chat.id, f'{db_commands.List.list_table()}')
 class StudentCallBackData:
     @bot.callback_query_handler(func=lambda call: call.data == 'student')
     def student(call):
