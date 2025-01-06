@@ -36,11 +36,6 @@ class StudentKeyboard:
 class DB:
     @bot.message_handler(commands=['db'])
     def db_test(message):
-        cursor.execute('SELECT * FROM Groups')
-        rows = cursor.fetchall()
-        data_message = "\n".join([f"{row}" for row in rows])
-        bot.send_message(message.chat.id, f'Вот твое расписание\n {data_message}')
-
         inline_keyboard_db_choose_group = types.InlineKeyboardMarkup(row_width=2)
         inline_keyboard_db_button_1 = types.InlineKeyboardButton('Группа-1', callback_data='gr-1')
         inline_keyboard_db_button_2 = types.InlineKeyboardButton('Группа-2', callback_data='gr-2')
@@ -75,6 +70,7 @@ class StudentCallBackData:
         message = call.message
         bot.send_message(message.chat.id, f'Вы вернулись в главнео меню',reply_markup=StudentKeyboard.show_student_kb())
 
+class DataBaseCallBack:
     @bot.callback_query_handler(func=lambda call: call.data == 'gr-1')
     def schedule_student(call):
         message = call.message
