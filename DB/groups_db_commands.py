@@ -1,5 +1,5 @@
 import sqlite3
-
+import cmd
 connection = sqlite3.connect('Groups.db',check_same_thread=False)
 cursor = connection.cursor()
 
@@ -15,9 +15,39 @@ cursor = connection.cursor()
 class AddValue:
 
     def add_table_value(Group_Name, Week, Day, Year):
-        cursor.execute(
-            'INSERT INTO Groups (Group_Name, Week, Day, Year) VAlUES (?,?,?,?)', (Group_Name,Week,Day,Year)
+
+        print(
+            f'Вы хотите внести в таблицу:'
+            f'Group_Name = {Group_Name}, Week = {Week}, Day = {Day}, Year = {Year}'
+            )
+
+        print(
+            f'Вы подверждаете изменение данных?'
+            f'"y" = yes, "n" = no'
         )
+        user_input = input()
+
+        if user_input == 'y':
+            try:
+
+                cursor.execute(
+                    'INSERT INTO Groups (Group_Name, Week, Day, Year) VAlUES (?,?,?,?)', (Group_Name, Week, Day, Year)
+                )
+                connection.commit()
+                print('Данные внесены')
+
+            except:
+
+                sqlite3.IntegrityError
+                print('Данные не уникальны')
+
+
+        if user_input == 'n':
+            print('Данные не внесены')
+
+
+
+
     def add_group_name(Group_Name):
         cursor.execute(
             'INSERT INTO Groups (Group_Name) VAlUES (?)', (Group_Name,)
@@ -47,7 +77,24 @@ class List:
       for cells in table:
         print(cells)
         return
+
 class Delete:
+
+    def table_string(Group_name, Week, Day, Year):
+        cursor.execute(
+            f'DELETE FROM Groups WHERE Group_name = {Group_name}'
+        )
+        cursor.execute(
+            f'DELETE FROM Groups WHERE Week = {Week}'
+        )
+        cursor.execute(
+            f'DELETE FROM Groups WHERE Day = {Day}'
+        )
+        cursor.execute(
+            f'DELETE FROM Groups WHERE Year = {Year}'
+        )
+        # return f'{test}'
+
     def delete_group_name(Group_name):
         cursor.execute(
             'DELETE FROM Groups WHERE Group_name == ?',(Group_name,)
@@ -72,8 +119,9 @@ class Delete:
         )
         connection.commit()
 
+AddValue.add_table_value(Group_Name='test5', Week='test5', Day='test4', Year='test4')
 
 
-List.list_table()
+# List.list_table()
 connection.commit()
 connection.close()
