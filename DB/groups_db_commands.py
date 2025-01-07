@@ -55,12 +55,20 @@ class AddValue:
 class List:
     @staticmethod
     def list_table():
-      cursor.execute('SELECT * FROM Groups')
-      table = cursor.fetchall()
-      for cells in table:
-        print(cells)
-        return
+        cursor.execute('SELECT * FROM Groups')
+        table = cursor.fetchall()
+        return table
+    @staticmethod
+    def list_group_name():
+        data = cursor.execute("SELECT Group_Name FROM Groups")
+        formated_data = '\n'.join([' '.join(map(str, row)) for row in data])
+        print(formated_data)
+        return data
 
+cursor.execute('''
+UPDATE Groups
+SET Room_Number = 'кабинет 28'
 
+''')
 connection.commit()
 connection.close()
