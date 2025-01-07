@@ -25,10 +25,10 @@ class TableGroupsDB:
     ''')
 
 class AddValue:
-    def add_table_value(Group_Name, Week, Day, Year):
+    def add_table_value(Group_Name, Week, Day, Year, Room_Number, Time):
         print(
             f'Вы хотите внести в таблицу:'
-            f'Group_Name = {Group_Name}, Week = {Week}, Day = {Day}, Year = {Year}'
+            f'Group_Name = {Group_Name}, Week = {Week}, Day = {Day}, Year = {Year}, Room_Number = {Room_Number}, Time = {Time}'
             )
         print(
             f'Вы подверждаете изменение данных?'
@@ -39,7 +39,7 @@ class AddValue:
         if user_input == 'y':
             try:
                 cursor.execute(
-                    'INSERT INTO Groups (Group_Name, Week, Day, Year) VAlUES (?,?,?,?)', (Group_Name, Week, Day, Year)
+                    'INSERT INTO Groups (Group_Name, Week, Day, Year) VAlUES (?,?,?,?,?,?)', (Group_Name, Week, Day, Year, Room_Number, Time)
                 )
                 connection.commit()
                 print('Данные внесены')
@@ -65,10 +65,6 @@ class List:
         print(formated_data)
         return data
 
-cursor.execute('''
-UPDATE Groups
-SET Room_Number = 'кабинет 28'
-
-''')
+AddValue.add_table_value(Group_Name='')
 connection.commit()
 connection.close()
