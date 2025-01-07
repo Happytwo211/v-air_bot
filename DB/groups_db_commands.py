@@ -58,17 +58,15 @@ class List:
         cursor.execute('SELECT * FROM Groups')
         table = cursor.fetchall()
         return table
-    @staticmethod
-    def list_group_name():
-        data = cursor.execute("SELECT Group_Name FROM Groups")
-        formated_data = '\n'.join([' '.join(map(str, row)) for row in data])
-        formated_data_split = formated_data.split('\n')
-        print(formated_data_split[0])
-        return formated_data
+    # @staticmethod
+    # def list_group_name():
+    #     data = cursor.execute("SELECT Group_Name FROM Groups")
+    #     formated_data = '\n'.join([' '.join(map(str, row)) for row in data])
+    #     formated_data_split = formated_data.split('\n')
+    #     # print(formated_data_split[0])
+    #     return formated_data_split
 
 
-
-List.list_group_name()
 
 connection.commit()
-connection.close()
+# connection.close()
