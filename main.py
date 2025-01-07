@@ -37,8 +37,8 @@ class DB:
     @bot.message_handler(commands=['db'])
     def db_test(message):
         inline_keyboard_db_choose_group = types.InlineKeyboardMarkup(row_width=2)
-        inline_keyboard_db_button_1 = types.InlineKeyboardButton(f'Группа-1' ,callback_data='gr-1')
-        inline_keyboard_db_button_2 = types.InlineKeyboardButton('Группа-2', callback_data='gr-2')
+        inline_keyboard_db_button_1 = types.InlineKeyboardButton(f'Группа-1' ,callback_data='РУТ МИИТ')
+        inline_keyboard_db_button_2 = types.InlineKeyboardButton('Группа-2', callback_data='1273')
         inline_keyboard_db_choose_group.add(inline_keyboard_db_button_1).add(inline_keyboard_db_button_2)
         bot.send_message(message.chat.id, f'Выбери свою группу', reply_markup=inline_keyboard_db_choose_group)
 
@@ -71,13 +71,19 @@ class StudentCallBackData:
         bot.send_message(message.chat.id, f'Вы вернулись в главнео меню',reply_markup=StudentKeyboard.show_student_kb())
 
 class DataBaseCallBack:
-    @bot.callback_query_handler(func=lambda call: call.data == 'gr-1')
+    @bot.callback_query_handler(func=lambda call: call.data == 'РУТ МИИТ')
     def schedule_student(call):
         message = call.message
         db_data = cursor.execute('SELECT Group_Name FROM Groups WHERE Group_Name = "Гимназия РУТ МИИТ"')
         formated_data = '\n'.join([' '.join(map(str, row)) for row in db_data])
         bot.send_message(message.chat.id, f'Расписание группы-1\n{(formated_data)}')
 
+    @bot.callback_query_handler(func=lambda call: call.data == '1273')
+    def schedule_student(call):
+        message = call.message
+        db_data = cursor.execute('SELECT Group_Name FROM Groups WHERE Group_Name = "Школа № 1273"')
+        formated_data = '\n'.join([' '.join(map(str, row)) for row in db_data])
+        bot.send_message(message.chat.id, f'Расписание группы-1\n{(formated_data)}')
 class TutorCallBackData:
     pass
 
