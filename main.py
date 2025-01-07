@@ -74,7 +74,7 @@ class DataBaseCallBack:
     @bot.callback_query_handler(func=lambda call: call.data == 'gr-1')
     def schedule_student(call):
         message = call.message
-        db_data = cursor.execute('SELECT * FROM Groups ORDER BY "Group_Name"')
+        db_data = cursor.execute('SELECT Group_Name FROM Groups WHERE Group_Name = "Гимназия РУТ МИИТ"')
         formated_data = '\n'.join([' '.join(map(str, row)) for row in db_data])
         bot.send_message(message.chat.id, f'Расписание группы-1\n{(formated_data)}')
 

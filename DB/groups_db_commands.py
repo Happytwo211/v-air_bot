@@ -3,27 +3,6 @@ import sqlite3
 connection = sqlite3.connect('Groups.db',check_same_thread=False)
 cursor = connection.cursor()
 
-#Команды:
-
-# cursor.execute(
-#     'DELETE FROM Groups WHERE Group_name == ?',(Group_name,)
-# )
-# cursor.execute(
-#     'DELETE FROM Groups WHERE Group_name == ?',(Group_name,)
-# )
-
-
-class TableGroupsDB:
-    pass
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS Groups (
-        Group_Name TEXT PRIMARY KEY,
-        Week TEXT ,
-        Day TEXT ,
-        Year TEXT
-    );
-    ''')
-
 class AddValue:
     def add_table_value(Group_Name, Week, Day, Year, Room_Number, Time):
         print(
@@ -58,15 +37,9 @@ class List:
         cursor.execute('SELECT * FROM Groups')
         table = cursor.fetchall()
         return table
-    # @staticmethod
-    # def list_group_name():
-    #     data = cursor.execute("SELECT Group_Name FROM Groups")
-    #     formated_data = '\n'.join([' '.join(map(str, row)) for row in data])
-    #     formated_data_split = formated_data.split('\n')
-    #     # print(formated_data_split[0])
-    #     return formated_data_split
+
 
 
 
 connection.commit()
-# connection.close()
+connection.close()
