@@ -39,7 +39,7 @@ class AddValue:
         if user_input == 'y':
             try:
                 cursor.execute(
-                    'INSERT INTO Groups (Group_Name, Week, Day, Year) VAlUES (?,?,?,?,?,?)', (Group_Name, Week, Day, Year, Room_Number, Time)
+                    'INSERT INTO Groups (Group_Name, Week, Day, Year, Room_Number, Time) VAlUES (?,?,?,?,?,?)', (Group_Name, Week, Day, Year, Room_Number, Time)
                 )
                 connection.commit()
                 print('Данные внесены')
@@ -62,9 +62,13 @@ class List:
     def list_group_name():
         data = cursor.execute("SELECT Group_Name FROM Groups")
         formated_data = '\n'.join([' '.join(map(str, row)) for row in data])
-        print(formated_data)
-        return data
+        formated_data_split = formated_data.split('\n')
+        print(formated_data_split[0])
+        return formated_data
 
-AddValue.add_table_value(Group_Name='')
+
+
+List.list_group_name()
+
 connection.commit()
 connection.close()
