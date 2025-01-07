@@ -37,7 +37,7 @@ class DB:
     @bot.message_handler(commands=['db'])
     def db_test(message):
         inline_keyboard_db_choose_group = types.InlineKeyboardMarkup(row_width=2)
-        inline_keyboard_db_button_1 = types.InlineKeyboardButton(f'{groups_db_commands.List.list_group_name()}' ,callback_data='gr-1')
+        inline_keyboard_db_button_1 = types.InlineKeyboardButton(f'Группа-1' ,callback_data='gr-1')
         inline_keyboard_db_button_2 = types.InlineKeyboardButton('Группа-2', callback_data='gr-2')
         inline_keyboard_db_choose_group.add(inline_keyboard_db_button_1).add(inline_keyboard_db_button_2)
         bot.send_message(message.chat.id, f'Выбери свою группу', reply_markup=inline_keyboard_db_choose_group)
