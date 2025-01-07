@@ -22,7 +22,8 @@ class StartKeyboard:
         inline_keyboard_student_admin = types.InlineKeyboardMarkup(row_width=2)
         inline_keyboard_student_admin_button_1 = types.InlineKeyboardButton('Я ученик', callback_data='student')
         inline_keyboard_student_admin_button_2 = types.InlineKeyboardButton('Я преподаватель', callback_data='tutor')
-        inline_keyboard_student_admin.add(inline_keyboard_student_admin_button_1).add(inline_keyboard_student_admin_button_2)
+        inline_keyboard_student_admin_button_3 = types.InlineKeyboardButton('test', callback_data='test')
+        inline_keyboard_student_admin.add(inline_keyboard_student_admin_button_1).add(inline_keyboard_student_admin_button_2).add(inline_keyboard_student_admin_button_3)
         return inline_keyboard_student_admin
 class StudentKeyboard:
     @staticmethod
@@ -48,6 +49,13 @@ class Commands:
         bot.send_photo(message.chat.id, 'https://imgur.com/a/4kg6OIp',
                        f'Это бот проекта ~V-Air~'
                        f'\n', reply_markup=StartKeyboard.show_start_kb())
+    # @bot.message_handler(commands=['test'])
+    # def test(message):
+    #     bot.send_message(message.chat.id, text='<blockquote>test message</blockquote>', parse_mode='HTML')
+    #     bot.send_message(message.chat.id, text='<code>test message</code>', parse_mode='HTML')
+
+
+
 
 class StudentCallBackData:
     @bot.callback_query_handler(func=lambda call: call.data == 'student')
@@ -69,6 +77,12 @@ class StudentCallBackData:
     def schedule_student(call):
         message = call.message
         bot.send_message(message.chat.id, f'Вы вернулись в главнео меню',reply_markup=StudentKeyboard.show_student_kb())
+
+
+    # @bot.callback_query_handler(func=lambda call: call.data == 'test')
+    # def schedule_student(call):
+    #     message = call.message
+    #     bot.answer_callback_query(callback_query_id=call.id, text= 'tbali')
 
 class DataBaseCallBack:
     @bot.callback_query_handler(func=lambda call: call.data == 'РУТ МИИТ')
