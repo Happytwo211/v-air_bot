@@ -1,6 +1,7 @@
 import sqlite3
-
+from datetime import date
 connection = sqlite3.connect('Groups.db',check_same_thread=False)
+
 cursor = connection.cursor()
 
 class AddValue:
@@ -39,6 +40,7 @@ class List:
         return table
 
 
+print(List.list_table())
 
 
 connection.commit()
