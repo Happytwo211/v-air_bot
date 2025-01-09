@@ -41,10 +41,7 @@ class Commands:
                        f'\n', reply_markup=StartKeyboard.show_start_kb())
 
 
-    # @bot.message_handler(commands=['test'])
-    # def test(message):
-    #     bot.send_message(message.chat.id, text='<blockquote>test message</blockquote>', parse_mode='HTML')
-    #     bot.send_message(message.chat.id, text='<code>test message</code>', parse_mode='HTML')
+
 class ScheduleStudent:
     def show_MIIT_schedule(message):
         cursor.execute('''
@@ -93,20 +90,18 @@ class StudentCallBackData:
         bot.send_message(message.chat.id, f'Вы вернулись в главнео меню',reply_markup=StudentKeyboard.show_student_kb())
 
 
-    # @bot.callback_query_handler(func=lambda call: call.data == 'test')
-    # def schedule_student(call):
-    #     message = call.message
-    #     bot.answer_callback_query(callback_query_id=call.id, text= 'tbali')
 
 class DataBaseCallBack:
+    # @bot.callback_query_handler(func=lambda call: call.data == 'Гимназия РУТ МИИТ')
+    # def schedule_student(call):
+    #     message = call.message
+    #     bot.answer_callback_query(callback_query_id=call.id, text= 'Вы уже на текущей неделе')
+
     @bot.callback_query_handler(func=lambda call: call.data == 'РУТ МИИТ')
     def schedule_student(call):
         message = call.message
         ScheduleStudent.show_MIIT_schedule(message)
-        # message = call.message
-        # db_data = cursor.execute('SELECT Group_Name FROM Groups WHERE Group_Name = "Гимназия РУТ МИИТ"')
-        # formated_data = '\n'.join([' '.join(map(str, row)) for row in db_data])
-        # bot.send_message(message.chat.id, f'Расписание группы-1\n{(formated_data)}')
+
 
     @bot.callback_query_handler(func=lambda call: call.data == '1273')
     def schedule_student(call):

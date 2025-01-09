@@ -3,7 +3,11 @@ from datetime import date
 connection = sqlite3.connect('Groups.db',check_same_thread=False)
 
 cursor = connection.cursor()
+def Miit_Value(Day, Int_Day, Month, Year, Week = None):
+    cursor.execute(
+                    'INSERT INTO Group_MIIT_Schedule (Week, Day, Int_Day, Month, Year) VAlUES (?,?,?,?,?)', (Week, Day, Int_Day, Month, Year))
 
+    connection.commit()
 class AddValue:
     def add_table_value(Group_Name, Week, Day, Year, Room_Number, Time):
         print(
@@ -40,7 +44,7 @@ class List:
         return table
 
 
-print(List.list_table())
+Miit_Value(Day='Пятница', Int_Day='10.01', Month='January', Year='2025')
 
 
 connection.commit()
