@@ -45,7 +45,7 @@ class Commands:
 class ScheduleStudent:
     def show_MIIT_schedule(message):
         cursor.execute('''
-        SELECT * from Groups WHERE Group_Name = 'Гимназия РУТ МИИТ'
+        SELECT Week from Groups WHERE Group_Name = 'Гимназия РУТ МИИТ'
         ''')
         show_data = cursor.fetchone()
         formated_data = '\n'.join([' '.join(map(str, row)) for row in show_data])
