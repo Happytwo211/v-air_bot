@@ -6,13 +6,43 @@ cursor = connection.cursor()
 
 
 # cursor.execute('''
+# ALTER TABLE schedule ADD COLUMN location TEXT NOT NULL;
+# ''')
+
+
+cursor.execute('''
+INSERT INTO schedule (group_id, week, weekday, start_time, end_time, classroom, location) VALUES
+(1, '06.01 - 12.01', 'Четверг', '16:25', '17:55', 'кабинет 28', '3-я Мытищинская ул., 12, стр. 1'),
+(2, '06.01 - 12.01', 'Пятница', '16:25', '17:55', 'кабинет 399', 'ул. Академика Капицы, 12'),
+(1, '06.01 - 12.01', 'Суббота', '11:00', '14:00', 'кабинет 5172', 'Бизнес-центр Neo Geo'),
+(2, '06.01 - 12.01', 'Воскресенье', '11:00', '14:00', 'кабинет 399', 'ул. Академика Капицы, 12');
+''')
+
+# cursor.execute('''
+# INSERT INTO groups (group_id, group_name, description) VALUES
+# (1, 'Гимназия РУТ МИИТ', ' место проведения: 3-я Мытищинская ул., 12, стр. 1'),
+# (2, 'Школа № 1273"', 'место проведения: ул. Академика Капицы, 12');
+# ''')
+
+
+# cursor.execute('''
+# CREATE TABLE groups (
+#     group_id INT PRIMARY KEY,
+#     group_name VARCHAR(50) NOT NULL,
+#     description VARCHAR(255)
+# );
+# ''')
+# cursor.execute('''
 # CREATE TABLE schedule (
 #     schedule_id INT AUTO_INCREMENT PRIMARY KEY,
 #     group_id INT NOT NULL,
-#     weekday TEXT NOT NULL CHECK (weekday IN ('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY')),
+#     week TEXT NOT NULL,
+#     weekday TEXT NOT NULL,
 #     start_time TIME NOT NULL,
 #     end_time TIME NOT NULL,
 #     classroom VARCHAR(50) NOT NULL,
+#     location TEXT NOT NULL,
+#
 #     FOREIGN KEY (group_id) REFERENCES groups(group_id)
 # );
 # '''
