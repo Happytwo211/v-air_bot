@@ -43,13 +43,14 @@ class Commands:
 
 
 class ScheduleStudent:
+
     def show_MIIT_schedule(message):
         cursor.execute('''
-        SELECT Week from Groups WHERE Group_Name = 'Гимназия РУТ МИИТ'
+        SELECT week from schedule WHERE group_id = 'Гимназия РУТ МИИТ'
         ''')
         show_data = cursor.fetchone()
         formated_data = '\n'.join([' '.join(map(str, row)) for row in show_data])
-        bot.send_message(message.chat.id, text=f'<blockquote>{formated_data}</blockquote>', parse_mode='HTML')
+        bot.send_message(message.chat.id, text=f'text<blockquote>{formated_data}</blockquote>', parse_mode='HTML')
         return formated_data
 
     def show_1273_schedule(message):
