@@ -73,7 +73,7 @@ class ScheduleStudent:
         if current_week:
             bot.send_message(
                 message.chat.id,
-                text=f"Текущая неделя: {current_week}",
+                text=f"Текущая неделя:<blockquote>{current_week[0]}</blockquote>",
                 parse_mode='HTML'
             )
         else:
