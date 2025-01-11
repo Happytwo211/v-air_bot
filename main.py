@@ -49,17 +49,19 @@ class CurrentWeek():
         end_of_week = start_of_week + timedelta(days=6)
 
         cursor.execute('''
-            SELECT week 
+            SELECT week
             FROM schedule 
             WHERE group_id = '1' AND date BETWEEN ? AND ?
             ''', (start_of_week, end_of_week))
 
+
         current_week = cursor.fetchone()
+
 
 
         if current_week:
 
-            return current_week[0]
+            return current_week
         else:
             return None
 
