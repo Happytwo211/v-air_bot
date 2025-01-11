@@ -5,18 +5,18 @@ connection = sqlite3.connect('Groups.db',check_same_thread=False)
 cursor = connection.cursor()
 
 
-# cursor.execute('''
-# ALTER TABLE schedule ADD COLUMN location TEXT NOT NULL;
-# ''')
-
-
 cursor.execute('''
-INSERT INTO schedule (group_id, week, weekday, start_time, end_time, classroom, location) VALUES
-(1, '06.01 - 12.01', 'Четверг', '16:25', '17:55', 'кабинет 28', '3-я Мытищинская ул., 12, стр. 1'),
-(2, '06.01 - 12.01', 'Пятница', '16:25', '17:55', 'кабинет 399', 'ул. Академика Капицы, 12'),
-(1, '06.01 - 12.01', 'Суббота', '11:00', '14:00', 'кабинет 5172', 'Бизнес-центр Neo Geo'),
-(2, '06.01 - 12.01', 'Воскресенье', '11:00', '14:00', 'кабинет 399', 'ул. Академика Капицы, 12');
+ALTER TABLE schedule ADD COLUMN date DATE;
 ''')
+
+
+# cursor.execute('''
+# INSERT INTO schedule (group_id, week, weekday, start_time, end_time, classroom, location) VALUES
+# (1, '06.01 - 12.01', 'Четверг', '16:25', '17:55', 'кабинет 28', '3-я Мытищинская ул., 12, стр. 1'),
+# (2, '06.01 - 12.01', 'Пятница', '16:25', '17:55', 'кабинет 399', 'ул. Академика Капицы, 12'),
+# (1, '06.01 - 12.01', 'Суббота', '11:00', '14:00', 'кабинет 5172', 'Бизнес-центр Neo Geo'),
+# (2, '06.01 - 12.01', 'Воскресенье', '11:00', '14:00', 'кабинет 399', 'ул. Академика Капицы, 12');
+# ''')
 
 # cursor.execute('''
 # INSERT INTO groups (group_id, group_name, description) VALUES

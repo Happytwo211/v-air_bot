@@ -4,8 +4,8 @@ from telebot import types
 import os
 import telebot
 import sqlite3
-from datetime import date
-# <blockquote>
+from datetime import date, timedelta
+
 
 db_path = os.path.join(os.getcwd(), 'DB/Groups.db')
 connection = sqlite3.connect(db_path, check_same_thread=False)
@@ -41,17 +41,67 @@ class Commands:
                        f'\n', reply_markup=StartKeyboard.show_start_kb())
 
 
+class CurrentWeek():
+    @staticmethod
+    def get_current_week():
+        today = date.today()
+        start_of_week = today - timedelta(days=today.weekday())
+        end_of_week = start_of_week + timedelta(days=6)
+
+        cursor.execute('''
+            SELECT week 
+            FROM schedule 
+            WHERE group_id = '1' AND date BETWEEN ? AND ?
+            ''', (start_of_week, end_of_week))
+
+        current_week = cursor.fetchone()
+
+
+        if current_week:
+
+            return current_week[0]
+        else:
+            return None
 
 class ScheduleStudent:
 
     def show_MIIT_schedule(message):
-        cursor.execute('''
-        SELECT week from schedule WHERE group_id = 'Гимназия РУТ МИИТ'
-        ''')
-        show_data = cursor.fetchone()
-        formated_data = '\n'.join([' '.join(map(str, row)) for row in show_data])
-        bot.send_message(message.chat.id, text=f'text<blockquote>{formated_data}</blockquote>', parse_mode='HTML')
-        return formated_data
+        current_week = CurrentWeek.get_current_week()
+
+        if current_week:
+            bot.send_message(
+                message.chat.id,
+                text=f"Текущая неделя: {current_week}",
+                parse_mode='HTML'
+            )
+        else:
+            bot.send_message(
+                message.chat.id,
+                text="Не удалось найти текущую неделю в расписании.",
+                parse_mode='HTML'
+            )
+
+        # cursor.execute('''
+        # SELECT week from schedule WHERE group_id = 1
+        # ''')
+        # show_data = cursor.fetchone()
+        # if show_data is not None:
+        #
+        #     formated_data = '\n'.join([str(show_data[0])])
+        #
+        #     bot.send_message(
+        #         message.chat.id,
+        #         text=f'<blockquote>{formated_data}</blockquote>',
+        #         parse_mode='HTML'
+        #     )
+        # else:
+        #     bot.send_message(
+        #         message.chat.id,
+        #         text="Не удалось найти расписание для указанной группы.",
+        #         parse_mode='HTML'
+        #     )
+        #
+        # return formated_data
 
     def show_1273_schedule(message):
         cursor.execute('''
