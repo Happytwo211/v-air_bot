@@ -83,36 +83,22 @@ class ScheduleStudent:
                 parse_mode='HTML'
             )
 
-        # cursor.execute('''
-        # SELECT week from schedule WHERE group_id = 1
-        # ''')
-        # show_data = cursor.fetchone()
-        # if show_data is not None:
-        #
-        #     formated_data = '\n'.join([str(show_data[0])])
-        #
-        #     bot.send_message(
-        #         message.chat.id,
-        #         text=f'<blockquote>{formated_data}</blockquote>',
-        #         parse_mode='HTML'
-        #     )
-        # else:
-        #     bot.send_message(
-        #         message.chat.id,
-        #         text="Не удалось найти расписание для указанной группы.",
-        #         parse_mode='HTML'
-        #     )
-        #
-        # return formated_data
-
     def show_1273_schedule(message):
-        cursor.execute('''
-        SELECT * from Groups WHERE Group_Name = 'Гимназия РУТ МИИТ'
-        ''')
-        show_data = cursor.fetchone()
-        formated_data = '\n'.join([' '.join(map(str, row)) for row in show_data])
-        bot.send_message(message.chat.id, text=f'<blockquote>{formated_data}</blockquote>', parse_mode='HTML')
-        return formated_data
+        current_week = CurrentWeek.get_current_week()
+
+        if current_week:
+            bot.send_message(
+                message.chat.id,
+                text=f"Текущая неделя:<blockquote>{current_week[0]}</blockquote>",
+                # TODO Добавить клавиатуру для пользователя, для выбора недели
+                parse_mode='HTML'
+            )
+        else:
+            bot.send_message(
+                message.chat.id,
+                text="Не удалось найти текущую неделю в расписании.",
+                parse_mode='HTML'
+            )
 
 class StudentCallBackData:
     @bot.callback_query_handler(func=lambda call: call.data == 'student')
