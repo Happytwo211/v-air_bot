@@ -50,7 +50,7 @@ class CurrentWeek():
 
         cursor.execute('''
             SELECT week
-            FROM schedule 
+            FROM schedule
             WHERE group_id = '1' AND date BETWEEN ? AND ?
             ''', (start_of_week, end_of_week))
 
