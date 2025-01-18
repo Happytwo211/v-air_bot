@@ -39,14 +39,28 @@ class StudentKeyboard:
 
 class ScheduleKeyboard:
     @staticmethod
-    def show_schedule_kb():
+    def show_schedule_kb_MIIT():
         inline_keyboard_schedule = types.InlineKeyboardMarkup(row_width=1)
         inline_keyboard_schedule_button_1 = types.InlineKeyboardButton('Предыдущая неделя',
-                                                                      callback_data='previous_week')
+                                                                      callback_data='previous_week_MIIT')
         inline_keyboard_schedule_button_2 = types.InlineKeyboardButton('Текущая неделя',
-                                                                      callback_data='current_week')
+                                                                      callback_data='current_week_MIIT')
         inline_keyboard_schedule_button_3 = types.InlineKeyboardButton('Cледующая неделя',
-                                                                      callback_data='next_week')
+                                                                      callback_data='next_week_MIIT')
+        inline_keyboard_schedule.add(inline_keyboard_schedule_button_1).add(inline_keyboard_schedule_button_2).add(
+            inline_keyboard_schedule_button_3
+        )
+        return inline_keyboard_schedule
+
+    @staticmethod
+    def show_schedule_kb_1273():
+        inline_keyboard_schedule = types.InlineKeyboardMarkup(row_width=1)
+        inline_keyboard_schedule_button_1 = types.InlineKeyboardButton('Предыдущая неделя',
+                                                                       callback_data='previous_week_1273')
+        inline_keyboard_schedule_button_2 = types.InlineKeyboardButton('Текущая неделя',
+                                                                       callback_data='current_week_1273')
+        inline_keyboard_schedule_button_3 = types.InlineKeyboardButton('Cледующая неделя',
+                                                                       callback_data='next_week_1273')
         inline_keyboard_schedule.add(inline_keyboard_schedule_button_1).add(inline_keyboard_schedule_button_2).add(
             inline_keyboard_schedule_button_3
         )
@@ -68,7 +82,7 @@ class TutorKeyboard:
         #     inline_keyboard_student_button_3)
         # return inline_keyboard_student
 
-
+#Комманды
 class Commands:
     @bot.message_handler(commands=['start'])
     def handle_start(message):
@@ -76,12 +90,31 @@ class Commands:
                        f'Это бот проекта ~V-Air~'
                        f'\n', reply_markup=StartKeyboard.show_start_kb())
 
-class ShowCurrentWeek:
+#Выбор недели
+class ShowWeek:
+    @staticmethod
+    def get_current_date():
+        return date.today()
+    @staticmethod
+    def change_week():
+        offset = int(None)
+        #if callback data == previous_week
+        #week_ossset = -1
+        # return ofset
+        #if callback data == next_week
+        #week_offset == 1
+        #return offset
+        #if callback == current_week
+        #week_offset == 0
+        #return offset
+        new_week = ShowWeek.get_current_date() + timedelta(days=offset*7)
+        return new_week
+
 
     @staticmethod
     def get_MIIT_current_week(message):
 
-        today = date.today()
+        today = ShowWeek.get_current_date()
         start_of_week = today - timedelta(days=today.weekday())
         end_of_week = start_of_week + timedelta(days=6)
 
@@ -98,7 +131,7 @@ class ShowCurrentWeek:
                 message.chat.id,
                 text=f"Текущая неделя:<blockquote>{current_week[0]}</blockquote>",
                 parse_mode='HTML',
-                reply_markup=ScheduleKeyboard.show_schedule_kb()
+                reply_markup=ScheduleKeyboard.show_schedule_kb_MIIT()
             )
             return current_week
         else:
@@ -110,7 +143,7 @@ class ShowCurrentWeek:
             return None
 
     def get_1273_current_week(message):
-        today = date.today()
+        today = ShowWeek.get_current_date()
         start_of_week = today - timedelta(days=today.weekday())
         end_of_week = start_of_week + timedelta(days=6)
 
@@ -130,7 +163,7 @@ class ShowCurrentWeek:
                 message.chat.id,
                 text=f"Текущая неделя:<blockquote>{current_week[0]}</blockquote>",
                 parse_mode='HTML',
-                reply_markup=ScheduleKeyboard.show_schedule_kb()
+                reply_markup=ScheduleKeyboard.show_schedule_kb_1273()
             )
             return current_week
 
@@ -142,6 +175,7 @@ class ShowCurrentWeek:
             )
             return None
 
+#CallData
 class StartCallBackData:
 
     @bot.callback_query_handler(func=lambda call: call.data == 'student')
@@ -180,17 +214,21 @@ class StudentCallBackData:
         message = call.message
         bot.send_message(message.chat.id, f'Вы вернулись в главное меню', reply_markup=StartKeyboard.show_start_kb())
 
-
 class GroupsCallData:
     @bot.callback_query_handler(func=lambda call: call.data == 'РУТ МИИТ')
     def schedule_student(call):
         message = call.message
-        ShowCurrentWeek.get_MIIT_current_week(message)
+        ShowWeek.get_MIIT_current_week(message)
 
     @bot.callback_query_handler(func=lambda call: call.data == '1273')
     def schedule_student(call):
         message = call.message
-        ShowCurrentWeek.get_MIIT_current_week(message)
+        ShowWeek.get_MIIT_current_week(message)
 
+class WeekCallData:
+    @bot.callback_query_handler(func=lambda call: call.data == 'current_week')
+    def current_week(call):
+        message = call.message
+        ShowWeek.get_current_date()
 
 bot.infinity_polling()
