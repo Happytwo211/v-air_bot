@@ -12,7 +12,7 @@ cursor = connection.cursor()
 #
 # cursor.execute('''
 # INSERT INTO schedule (group_id, week, weekday, start_time, end_time, classroom, location, date) VALUES
-# (1, '13.01-19.01', 'Четверг', '16:25', '17:55', 'кабинет 28', '3-я Мытищинская ул., 12, стр. 1', '2025-01-18')
+# (1, '6.01-12.01', 'Четверг', '16:25', '17:55', 'кабинет 28', '3-я Мытищинская ул., 12, стр. 1', '2025-01-11')
 #
 # ''')
 

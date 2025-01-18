@@ -218,7 +218,7 @@ class GroupsCallData:
 class WeekCallData:
     #MIIT
 
-   #CurrentWeek
+
     @bot.callback_query_handler(func=lambda call: call.data == 'current_week_MIIT')
     def current_week_MIIT(call):
         message = call.message
@@ -258,6 +258,38 @@ class WeekCallData:
             )
             return None
 
+    @bot.callback_query_handler(func=lambda call: call.data == 'previous_week_MIIT')
+    def next_week_MIIT(call):
+        message = call.message
+        current_date = ShowWeek.get_current_date()
+        previous_week_date = ShowWeek.change_week(current_date, offset=-1)
+
+        start_of_previous_week = previous_week_date - timedelta(days=previous_week_date.weekday())
+        end_of_previous_week = start_of_previous_week + timedelta(days=6)
+
+        cursor.execute('''
+                           SELECT week
+                           FROM schedule 
+                           WHERE group_id = '1' AND date BETWEEN ? AND ?
+                           ''', (start_of_previous_week, end_of_previous_week))
+
+        previous_week = cursor.fetchone()
+
+        if previous_week:
+            bot.send_message(
+                message.chat.id,
+                text=f"Текущая неделя:<blockquote>{previous_week[0]}</blockquote>",
+                parse_mode='HTML',
+                reply_markup=ScheduleKeyboard.show_schedule_kb_MIIT()
+            )
+            return previous_week
+        else:
+            bot.send_message(
+                message.chat.id,
+                text="Не удалось найти текущую неделю в расписании.",
+                parse_mode='HTML'
+            )
+            return None
 
 
     #1273
