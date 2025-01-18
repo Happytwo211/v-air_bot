@@ -40,12 +40,12 @@ class StudentKeyboard:
 class ScheduleKeyboard:
     @staticmethod
     def show_schedule_kb():
-        inline_keyboard_schedule = types.InlineKeyboardMarkup(row_width=2)
+        inline_keyboard_schedule = types.InlineKeyboardMarkup(row_width=1)
         inline_keyboard_schedule_button_1 = types.InlineKeyboardButton('Предыдущая неделя',
                                                                       callback_data='previous_week')
-        inline_keyboard_schedule_button_2  = types.InlineKeyboardButton('Текущая неделя',
+        inline_keyboard_schedule_button_2 = types.InlineKeyboardButton('Текущая неделя',
                                                                       callback_data='current_week')
-        inline_keyboard_schedule_button_3  = types.InlineKeyboardButton('Cледующая неделя',
+        inline_keyboard_schedule_button_3 = types.InlineKeyboardButton('Cледующая неделя',
                                                                       callback_data='next_week')
         inline_keyboard_schedule.add(inline_keyboard_schedule_button_1).add(inline_keyboard_schedule_button_2).add(
             inline_keyboard_schedule_button_3
@@ -53,9 +53,21 @@ class ScheduleKeyboard:
         return inline_keyboard_schedule
 
 class TutorKeyboard:
+    pass
     @staticmethod
     def show_tutor_kb():
         pass
+        # inline_keyboard_tutor = types.InlineKeyboardMarkup()
+        # inline_keyboard_tutor_button_2 = types.InlineKeyboardButton('Выбрать группу',
+        #                                                               callback_data='schedule_student')
+        # inline_keyboard_student_button_3 = types.InlineKeyboardButton('Получить материалы уроков',
+        #                                                               callback_data='lesson_materials_student')
+        # inline_keyboard_student_button_4 = types.InlineKeyboardButton('Вернуться в главное меню',
+        #                                                               callback_data='main_menu')
+        # inline_keyboard_student.add(inline_keyboard_student_button_1).add(inline_keyboard_student_button_2).add(
+        #     inline_keyboard_student_button_3)
+        # return inline_keyboard_student
+
 
 class Commands:
     @bot.message_handler(commands=['start'])
@@ -110,12 +122,15 @@ class ShowCurrentWeek:
 
         current_week = cursor.fetchone()
 
+
+        cursor.fetchone()
+
         if current_week:
             bot.send_message(
                 message.chat.id,
                 text=f"Текущая неделя:<blockquote>{current_week[0]}</blockquote>",
                 parse_mode='HTML',
-                reply_markup= ScheduleKeyboard.show_schedule_kb()
+                reply_markup=ScheduleKeyboard.show_schedule_kb()
             )
             return current_week
 
@@ -165,6 +180,17 @@ class StudentCallBackData:
         message = call.message
         bot.send_message(message.chat.id, f'Вы вернулись в главное меню', reply_markup=StartKeyboard.show_start_kb())
 
+
+class GroupsCallData:
+    @bot.callback_query_handler(func=lambda call: call.data == 'РУТ МИИТ')
+    def schedule_student(call):
+        message = call.message
+        ShowCurrentWeek.get_MIIT_current_week(message)
+
+    @bot.callback_query_handler(func=lambda call: call.data == '1273')
+    def schedule_student(call):
+        message = call.message
+        ShowCurrentWeek.get_MIIT_current_week(message)
 
 
 bot.infinity_polling()

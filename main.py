@@ -47,6 +47,8 @@ class CurrentWeek():
         today = date.today()
         start_of_week = today - timedelta(days=today.weekday())
         end_of_week = start_of_week + timedelta(days=6)
+        print(type(start_of_week))
+        print(start_of_week,end_of_week)
 
         cursor.execute('''
             SELECT week
