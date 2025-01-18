@@ -96,17 +96,7 @@ class ShowWeek:
     def get_current_date():
         return date.today()
     @staticmethod
-    def change_week():
-        offset = int(None)
-        #if callback data == previous_week
-        #week_ossset = -1
-        # return ofset
-        #if callback data == next_week
-        #week_offset == 1
-        #return offset
-        #if callback == current_week
-        #week_offset == 0
-        #return offset
+    def change_week(current_date, offset):
         new_week = ShowWeek.get_current_date() + timedelta(days=offset*7)
         return new_week
 
@@ -226,9 +216,55 @@ class GroupsCallData:
         ShowWeek.get_MIIT_current_week(message)
 
 class WeekCallData:
-    @bot.callback_query_handler(func=lambda call: call.data == 'current_week')
-    def current_week(call):
-        message = call.message
-        ShowWeek.get_current_date()
+    #MIIT
 
+   #CurrentWeek
+    @bot.callback_query_handler(func=lambda call: call.data == 'current_week_MIIT')
+    def current_week_MIIT(call):
+        message = call.message
+        ShowWeek.get_MIIT_current_week(message)
+
+    @bot.callback_query_handler(func=lambda call: call.data == 'next_week_MIIT')
+    def next_week_MIIT(call):
+        message = call.message
+        current_date = ShowWeek.get_current_date()
+        next_week_date = ShowWeek.change_week(current_date, offset=1)
+
+
+        start_of_next_week = next_week_date - timedelta(days=next_week_date.weekday())
+        end_of_next_week = start_of_next_week + timedelta(days=6)
+
+        cursor.execute('''
+                       SELECT week
+                       FROM schedule 
+                       WHERE group_id = '1' AND date BETWEEN ? AND ?
+                       ''', (start_of_next_week, end_of_next_week))
+
+        next_week = cursor.fetchone()
+
+        if next_week:
+            bot.send_message(
+                message.chat.id,
+                text=f"Текущая неделя:<blockquote>{next_week[0]}</blockquote>",
+                parse_mode='HTML',
+                reply_markup=ScheduleKeyboard.show_schedule_kb_MIIT()
+            )
+            return next_week
+        else:
+            bot.send_message(
+                message.chat.id,
+                text="Не удалось найти текущую неделю в расписании.",
+                parse_mode='HTML'
+            )
+            return None
+
+
+
+    #1273
+    @bot.callback_query_handler(func=lambda call: call.data == 'current_week_1273')
+    def current_week_1273(call):
+        message = call.message
+        ShowWeek.get_1273_current_week(message)
+
+    #PreviousWeek
 bot.infinity_polling()
