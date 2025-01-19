@@ -373,7 +373,4 @@ class WeekCallData:
             return None
 
 
-
-
-
 bot.infinity_polling()
