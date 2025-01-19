@@ -43,16 +43,20 @@ class StudentKeyboard:
 class ScheduleKeyboard:
     @staticmethod
     def show_schedule_kb_MIIT():
-        inline_keyboard_schedule = types.InlineKeyboardMarkup(row_width=1)
-        inline_keyboard_schedule_button_1 = types.InlineKeyboardButton('Предыдущая неделя',
+        inline_keyboard_schedule = types.InlineKeyboardMarkup(row_width=3)
+        inline_keyboard_schedule_button_1 = types.InlineKeyboardButton('⬅️',
                                                                       callback_data='previous_week_MIIT')
-        inline_keyboard_schedule_button_2 = types.InlineKeyboardButton('Текущая неделя',
+        inline_keyboard_schedule_button_2 = types.InlineKeyboardButton('🏠',
                                                                       callback_data='current_week_MIIT')
-        inline_keyboard_schedule_button_3 = types.InlineKeyboardButton('Cледующая неделя',
+        inline_keyboard_schedule_button_3 = types.InlineKeyboardButton('➡️',
                                                                       callback_data='next_week_MIIT')
-        inline_keyboard_schedule.add(inline_keyboard_schedule_button_1).add(inline_keyboard_schedule_button_2).add(
+        inline_keyboard_schedule.row(
+            inline_keyboard_schedule_button_1,
+            inline_keyboard_schedule_button_2,
             inline_keyboard_schedule_button_3
         )
+        # inline_keyboard_schedule.add(inline_keyboard_schedule_button_1).add(inline_keyboard_schedule_button_2).add(
+        #     inline_keyboard_schedule_button_3
         return inline_keyboard_schedule
 
     @staticmethod
@@ -369,17 +373,7 @@ class WeekCallData:
             return None
 
 
-#TEST
 
-#     @bot.callback_query_handler(func=lambda call: call.data == 'current_week_1273')
-#     def current_week_1273(call):
-#         message = call.message
-#         ShowWeek.get_1273_current_week(message)
-# @bot.message_handler(func=lambda message: True)
-# def handle_message(message):
-#
-#     if message.text == 'test':
-#         WeekCallData.current_week_1273
 
 
 bot.infinity_polling()
