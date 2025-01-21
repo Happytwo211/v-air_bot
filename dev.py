@@ -1,3 +1,4 @@
+import re
 from Admins import admin_list
 from TOKEN import Token
 from telebot import types
@@ -7,7 +8,7 @@ import sqlite3
 from datetime import date, timedelta
 
 #TODO Добавить выведение вместе с неделями самого расписаниия
-
+#TODO Cделать, чтобы неделю можно было написать самому в чат бота и он выдал расписание с ней в формате 13.01-19.01
 
 #Подключение БД
 db_path = os.path.join(os.getcwd(), 'DB/Groups.db')
@@ -34,9 +35,9 @@ class StudentKeyboard:
     @staticmethod
     def show_student_kb():
         inline_keyboard_student = types.InlineKeyboardMarkup()
-        inline_keyboard_student_button_1 = types.InlineKeyboardButton('Узнать расписание cвоей группы', callback_data='schedule_student')
-        inline_keyboard_student_button_2 = types.InlineKeyboardButton('Получить материалы уроков', callback_data='lesson_materials_student')
-        inline_keyboard_student_button_3 = types.InlineKeyboardButton('Вернуться в главное меню', callback_data='main_menu')
+        inline_keyboard_student_button_1 = types.InlineKeyboardButton('Узнать расписание cвоей группы', callback_data='schedule_student', one_time_keyboard=True)
+        inline_keyboard_student_button_2 = types.InlineKeyboardButton('Получить материалы уроков', callback_data='lesson_materials_student', one_time_keyboard=True)
+        inline_keyboard_student_button_3 = types.InlineKeyboardButton('Вернуться в главное меню', callback_data='main_menu', one_time_keyboard=True)
         inline_keyboard_student.add(inline_keyboard_student_button_1).add(inline_keyboard_student_button_2).add(inline_keyboard_student_button_3)
         return inline_keyboard_student
 
@@ -99,11 +100,14 @@ class Commands:
                        f'Это бот проекта ~V-Air~'
                        f'\n', reply_markup=StartKeyboard.show_start_kb())
 
+
+
 #Выбор недели
 class ShowWeek:
     @staticmethod
     def get_current_date():
         return date.today()
+
     @staticmethod
     def change_week(current_date, offset):
         new_week = ShowWeek.get_current_date() + timedelta(days=offset*7)
@@ -140,6 +144,7 @@ class ShowWeek:
                             parse_mode='HTML'
                         )
             return None
+
 
     def get_1273_current_week(message):
         today = ShowWeek.get_current_date()
@@ -203,6 +208,7 @@ class StudentCallBackData:
         bot.send_message(message.chat.id, text='Выбери свою группу', parse_mode='HTML',
                          reply_markup=inline_keyboard_db_choose_group)
 
+
     @bot.callback_query_handler(func=lambda call: call.data == 'lesson_materials_student')
     def get_lesson_materials(call):
         message = call.message
@@ -254,7 +260,7 @@ class WeekCallData:
         if next_week:
             bot.send_message(
                 message.chat.id,
-                text=f"Текущая неделя:<blockquote>{next_week[0]}</blockquote>",
+                text=f"Следующая неделя:<blockquote>{next_week[0]}</blockquote>",
                 parse_mode='HTML',
                 reply_markup=ScheduleKeyboard.show_schedule_kb_MIIT()
             )
@@ -287,7 +293,7 @@ class WeekCallData:
         if previous_week:
             bot.send_message(
                 message.chat.id,
-                text=f"Текущая неделя:<blockquote>{previous_week[0]}</blockquote>",
+                text=f"Предыдущая неделя:<blockquote>{previous_week[0]}</blockquote>",
                 parse_mode='HTML',
                 reply_markup=ScheduleKeyboard.show_schedule_kb_MIIT()
             )
@@ -328,7 +334,7 @@ class WeekCallData:
         if next_week:
             bot.send_message(
                 message.chat.id,
-                text=f"Текущая неделя:<blockquote>{next_week[0]}</blockquote>",
+                text=f"Следующая неделя:<blockquote>{next_week[0]}</blockquote>",
                 parse_mode='HTML',
                 reply_markup=ScheduleKeyboard.show_schedule_kb_MIIT()
             )
@@ -361,7 +367,7 @@ class WeekCallData:
         if previous_week:
             bot.send_message(
                 message.chat.id,
-                text=f"Текущая неделя:<blockquote>{previous_week[0]}</blockquote>",
+                text=f"Предыдущая неделя:<blockquote>{previous_week[0]}</blockquote>",
                 parse_mode='HTML',
                 reply_markup=ScheduleKeyboard.show_schedule_kb_MIIT()
             )
@@ -375,7 +381,33 @@ class WeekCallData:
             return None
 
 
+class ManualWeek:
 
 
+    @bot.message_handler(commands=['schedule'])
+    def handle_schedule(message):
+        inline_keyboard_db_choose_group = types.InlineKeyboardMarkup(row_width=2)
+        inline_keyboard_db_button_1 = types.InlineKeyboardButton('Гимназия РУТ МИИТ', callback_data='id_1')
+        inline_keyboard_db_button_2 = types.InlineKeyboardButton('Школа №1273', callback_data='id_2')
+        inline_keyboard_db_choose_group.add(inline_keyboard_db_button_1, inline_keyboard_db_button_2)
+        bot.send_message(message.chat.id, text='Выберите вашу группу:', parse_mode='HTML',
+                         reply_markup=inline_keyboard_db_choose_group)
+
+    # Обработка нажатий на инлайн кнопки
+    @bot.callback_query_handler(func=lambda call: call.data in ['id_1', 'id_2'])
+    def manual_schedule(call):
+        bot.answer_callback_query(call.id)
+        bot.send_message(call.message.chat.id, text=f'Пожалуйста, введите нужную неделю в формате DD.MM-DD.MM:')
+
+    # Общая обработка сообщений
+    @bot.message_handler(func=lambda message: True)
+    def handle_message(message):
+        user_id = message.from_user.id
+        chat_id = message.chat.id
+        date_pattern = r'\d{2}\.\d{2}-\d{2}\.\d{2}'
+        if re.match(date_pattern, message.text):
+            bot.reply_to(message, f'Сообщение принято! Загрузка...')
+        else:
+            bot.send_message(chat_id, f'Некорректный формат даты. Пожалуйста, введите дату в формате DD.MM-DD.MM.')
 
 bot.infinity_polling()
