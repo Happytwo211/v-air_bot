@@ -436,5 +436,5 @@ class ManualWeek:
                                       f'\nЧтобы вернутся на начальную страницу - /home')
 
 
-
+ff
 bot.infinity_polling()
