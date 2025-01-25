@@ -399,7 +399,14 @@ class ManualWeek:
         bot.answer_callback_query(call.id)
         bot.send_message(call.message.chat.id, text=f'Вы выбрали группу Гимназия РУТ МИИТ'
                                                     f'Пожалуйста, введите нужную неделю в формате DD.MM-DD.MM:')
+        return 'id_1'
 
+    @bot.callback_query_handler(func=lambda call: call.data in ['id_2'])
+    def manual_schedule(call):
+        bot.answer_callback_query(call.id)
+        bot.send_message(call.message.chat.id, text=f'Вы выбрали группу Гимназия РУТ МИИТ'
+                                                    f'Пожалуйста, введите нужную неделю в формате DD.MM-DD.MM:')
+        return 'id_2'
 
     @bot.message_handler(func=lambda message: True)
     def handle_message(message):
@@ -408,24 +415,39 @@ class ManualWeek:
         date_pattern = r'\d{2}\.\d{2}-\d{2}\.\d{2}'
         if re.match(date_pattern, message.text):
 
-            start_of_week = message.text[:5]
-            end_of_week = message.text[6:]
 
 
-            cursor.execute('''
-                          SELECT week
-                          FROM schedule
-                          WHERE group_id = '1' AND date BETWEEN ? AND ?
-                          ''', (start_of_week, end_of_week))
+            if 'id_1':
+                cursor.execute('''
+                              SELECT weekday, start_time, end_time, classroom, date, location
+                              FROM schedule
+                              WHERE group_id = '1' AND week BETWEEN ? AND ?
+                              ''', (message.text.split('-')[0], message.text.split('-')[1]))
 
-            schedule_data = cursor.fetchone()
+                schedule_data = cursor.fetchall()
 
-            if schedule_data:
-                bot.send_message(message.chat.id, f'Твое расписание'
-                                                  f'\n{schedule_data}')
-            else:
-                bot.send_message(message.chat.id, f'Такой недели не найдено')
-                return None
+                if schedule_data:
+                    bot.send_message(message.chat.id, f'Твое расписание'
+                                                      f'\n{schedule_data[0]}')
+                else:
+                    bot.send_message(message.chat.id, f'Такой недели не найдено')
+                    return None
+
+            if 'id_2':
+                cursor.execute('''
+                              SELECT week
+                              FROM schedule
+                              WHERE group_id = '2' AND date BETWEEN ? AND ?
+                              ''', (message_data))
+
+                schedule_data = cursor.fetchone()
+
+                if schedule_data:
+                    bot.send_message(message.chat.id, f'Твое расписание'
+                                                      f'\n{schedule_data}')
+                else:
+                    bot.send_message(message.chat.id, f'Такой недели не найдено')
+                    return None
 
         elif message.text == '/home':
             bot.send_message(message.chat.id, 'Вы вернулдись на жомашнюю страницу', reply_markup=StartKeyboard.show_start_kb() )
@@ -436,5 +458,4 @@ class ManualWeek:
                                       f'\nЧтобы вернутся на начальную страницу - /home')
 
 
-ff
 bot.infinity_polling()
