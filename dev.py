@@ -438,7 +438,7 @@ class ManualWeek:
                               SELECT week
                               FROM schedule
                               WHERE group_id = '2' AND date BETWEEN ? AND ?
-                              ''', (message_data))
+                              ''', ((message.text.split('-')[0], message.text.split('-')[1])))
 
                 schedule_data = cursor.fetchone()
 
