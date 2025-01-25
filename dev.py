@@ -393,21 +393,48 @@ class ManualWeek:
         bot.send_message(message.chat.id, text='Выберите вашу группу:', parse_mode='HTML',
                          reply_markup=inline_keyboard_db_choose_group)
 
-    # Обработка нажатий на инлайн кнопки
-    @bot.callback_query_handler(func=lambda call: call.data in ['id_1', 'id_2'])
+
+    @bot.callback_query_handler(func=lambda call: call.data in ['id_1'])
     def manual_schedule(call):
         bot.answer_callback_query(call.id)
-        bot.send_message(call.message.chat.id, text=f'Пожалуйста, введите нужную неделю в формате DD.MM-DD.MM:')
+        bot.send_message(call.message.chat.id, text=f'Вы выбрали группу Гимназия РУТ МИИТ'
+                                                    f'Пожалуйста, введите нужную неделю в формате DD.MM-DD.MM:')
 
-    # Общая обработка сообщений
+
     @bot.message_handler(func=lambda message: True)
     def handle_message(message):
         user_id = message.from_user.id
         chat_id = message.chat.id
         date_pattern = r'\d{2}\.\d{2}-\d{2}\.\d{2}'
         if re.match(date_pattern, message.text):
-            bot.reply_to(message, f'Сообщение принято! Загрузка...')
+
+            start_of_week = message.text[:5]
+            end_of_week = message.text[6:]
+
+
+            cursor.execute('''
+                          SELECT week
+                          FROM schedule
+                          WHERE group_id = '1' AND date BETWEEN ? AND ?
+                          ''', (start_of_week, end_of_week))
+
+            schedule_data = cursor.fetchone()
+
+            if schedule_data:
+                bot.send_message(message.chat.id, f'Твое расписание'
+                                                  f'\n{schedule_data}')
+            else:
+                bot.send_message(message.chat.id, f'Такой недели не найдено')
+                return None
+
+        elif message.text == '/home':
+            bot.send_message(message.chat.id, 'Вы вернулдись на жомашнюю страницу', reply_markup=StartKeyboard.show_start_kb() )
+
+
         else:
-            bot.send_message(chat_id, f'Некорректный формат даты. Пожалуйста, введите дату в формате DD.MM-DD.MM.')
+            bot.send_message(chat_id, f'Некорректный формат даты. Пожалуйста, введите дату в формате DD.MM-DD.MM.'
+                                      f'\nЧтобы вернутся на начальную страницу - /home')
+
+
 
 bot.infinity_polling()
