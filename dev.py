@@ -404,7 +404,7 @@ class ManualWeek:
     @bot.callback_query_handler(func=lambda call: call.data in ['id_2'])
     def manual_schedule(call):
         bot.answer_callback_query(call.id)
-        bot.send_message(call.message.chat.id, text=f'Вы выбрали группу Гимназия РУТ МИИТ'
+        bot.send_message(call.message.chat.id, text=f'Вы выбрали группу Школа 1273'
                                                     f'Пожалуйста, введите нужную неделю в формате DD.MM-DD.MM:')
         return 'id_2'
 
@@ -428,19 +428,19 @@ class ManualWeek:
 
                 if schedule_data:
                     bot.send_message(message.chat.id, f'Твое расписание'
-                                                      f'\n{schedule_data[0]}')
+                                                      f'\n{schedule_data}')
                 else:
                     bot.send_message(message.chat.id, f'Такой недели не найдено')
                     return None
 
             if 'id_2':
                 cursor.execute('''
-                              SELECT week
+                              SELECT weekday, start_time, end_time, classroom, date, location
                               FROM schedule
-                              WHERE group_id = '2' AND date BETWEEN ? AND ?
-                              ''', ((message.text.split('-')[0], message.text.split('-')[1])))
+                              WHERE group_id = '1' AND week BETWEEN ? AND ?
+                              ''', (message.text.split('-')[0], message.text.split('-')[1]))
 
-                schedule_data = cursor.fetchone()
+                schedule_data = cursor.fetchall()
 
                 if schedule_data:
                     bot.send_message(message.chat.id, f'Твое расписание'
