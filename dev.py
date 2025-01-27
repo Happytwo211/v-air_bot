@@ -398,15 +398,12 @@ class ManualWeek:
     def query_handler(call):
         if call.data == 'id_1':
             message = call.message
-            message_str = str(message.text)
-            date_pattern = r'\d{2}\.\d{2}-\d{2}\.\d{2}'
             bot.answer_callback_query(callback_query_id=call.id, text='Вы выбрали группу Гимназия РУУТ МИИТ')
             message_data = bot.send_message(message.chat.id, f'Введите нужную неделю в формате DD.MM-DD.MM')
             bot.register_next_step_handler(message_data, ManualWeek.handle_user_input_id_1)
 
         if call.data == 'id_2':
             message = call.message
-            message_str = str(message.text)
             bot.answer_callback_query(callback_query_id=call.id, text='Вы выбрали группу Школа №1273')
             message_data = bot.send_message(message.chat.id, f'Введите нужную неделю в формате DD.MM-DD.MM')
             bot.register_next_step_handler(message_data, ManualWeek.handle_user_input_id_2)
