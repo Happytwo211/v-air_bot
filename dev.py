@@ -6,6 +6,7 @@ import os
 import telebot
 import sqlite3
 from datetime import date, timedelta
+from Groups import v_air_groups
 
 #TODO Добавить выведение вместе с неделями самого расписаниия
 #TODO Cделать, чтобы неделю можно было написать самому в чат бота и он выдал расписание с ней в формате 13.01-19.01
@@ -100,7 +101,9 @@ class Commands:
                        f'Это бот проекта ~V-Air~'
                        f'\n', reply_markup=StartKeyboard.show_start_kb())
 
-
+    @bot.message_handler(commands=['schedule'])
+    def handle_schedule(message):
+        bot.send_message(message.chat.id, f'Выбери свою группу:', reply_markup=ManualWeek.choose_group(message))
 
 #Выбор недели
 class ShowWeek:
@@ -383,86 +386,44 @@ class WeekCallData:
 
 class ManualWeek:
 
-    @bot.message_handler(commands=['schedule'])
-    def handle_schedule(message):
-        inline_keyboard_db_choose_group = types.InlineKeyboardMarkup(row_width=2)
-        inline_keyboard_db_button_1 = types.InlineKeyboardButton('Гимназия РУТ МИИТ', callback_data='id_1')
-        inline_keyboard_db_button_2 = types.InlineKeyboardButton('Школа №1273', callback_data='id_2')
-        inline_keyboard_db_choose_group.add(inline_keyboard_db_button_1, inline_keyboard_db_button_2)
-        bot.send_message(message.chat.id, text='Выберите вашу группу:', parse_mode='HTML',
-                         reply_markup=inline_keyboard_db_choose_group)
+    def choose_group(message):
+        inline_kb = types.InlineKeyboardMarkup(row_width=1)
+        inline_kb_b_1 = types.InlineKeyboardButton('Гимназия Миит', callback_data='id_1')
+        inline_kb_b_2 = types.InlineKeyboardButton('Школа №1273', callback_data='id_2')
+        inline_kb.add(inline_kb_b_1).add(inline_kb_b_2)
+        return inline_kb
 
+    @staticmethod
+    @bot.callback_query_handler(func=lambda call: True)
+    def query_handler(call):
+        if call.data == 'id_1':
+            message = call.message
+            message_str = str(message.text)
+            date_pattern = r'\d{2}\.\d{2}-\d{2}\.\d{2}'
+            bot.answer_callback_query(callback_query_id=call.id, text='Вы выбрали группу Гимназия РУУТ МИИТ')
+            message_data = bot.send_message(message.chat.id, f'Введите нужную неделю в формате DD.MM-DD.MM')
+            bot.register_next_step_handler(message_data, ManualWeek.handle_user_input)
 
-    @bot.callback_query_handler(func=lambda call: call.data == 'id_1')
-    def manual_schedule(call):
-        global id_1
-        id_1 = True
-        bot.answer_callback_query(call.id)
-        bot.send_message(call.message.chat.id, text=f'Вы выбрали группу Гимназия РУТ МИИТ'
-                                                    f'Пожалуйста, введите нужную неделю в формате DD.MM-DD.MM:')
-        return id_1
-
-
-    @bot.callback_query_handler(func=lambda call: call.data == 'id_2')
-    def manual_schedule(call):
-        global id_2
-        id_2 = True
-        bot.answer_callback_query(call.id)
-        bot.send_message(call.message.chat.id, text=f'Вы выбрали группу Школа 1273'
-                                                    f'Пожалуйста, введите нужную неделю в формате DD.MM-DD.MM:')
-        return id_2
-
-
-    @bot.message_handler(func=lambda message: True)
-    def handle_message(message):
-        user_id = message.from_user.id
-        chat_id = message.chat.id
+    @staticmethod
+    def handle_user_input(message):
         date_pattern = r'\d{2}\.\d{2}-\d{2}\.\d{2}'
         if re.match(date_pattern, message.text):
-            message_str = str(message.text)
-
-            if id_1:
-                cursor.execute('''
-                                  SELECT weekday, start_time, end_time, classroom, date, location
-                                  FROM schedule
-                                  WHERE group_id = '1' AND week = ?
-                                  ''', (message_str,))
-
-                schedule_data = cursor.fetchall()
-
-                if schedule_data:
-                    bot.send_message(message.chat.id, f'Твое расписание'
-                                                      f'\n{schedule_data}')
-                else:
-                    bot.send_message(message.chat.id, f'Такой недели не найдено')
-                    return None
-
-            elif id_2:
-                    cursor.execute('''
-                                  SELECT weekday, start_time, end_time, classroom, date, location
-                                  FROM schedule
-                                  WHERE group_id = '2' AND week BETWEEN ? AND ?
-                                  ''', (message.text.split('-')[0], message.text.split('-')[1]))
-
-                    schedule_data = cursor.fetchall()
-
-                    if schedule_data:
-                        bot.send_message(message.chat.id, f'Твое расписание'
-                                                          f'\n{schedule_data}')
-                    else:
-                        bot.send_message(message.chat.id, f'Такой недели не найдено')
-                        return None
-            else:
-                bot.send_message(message.chat.id, f'Произошла оишбка')
-
-
-        elif message.text == '/home':
-            bot.send_message(message.chat.id, 'Вы вернулдись на жомашнюю страницу', reply_markup=StartKeyboard.show_start_kb() )
-
-
+           ManualWeek.process_data_range(message)
         else:
-            bot.send_message(chat_id, f'Некорректный формат даты. Пожалуйста, введите дату в формате DD.MM-DD.MM.'
-                                      f'\nЧтобы вернутся на начальную страницу - /home')
+            bot.reply_to(message, "Некорректный формат даты. Попробуйте еще раз.")
+
+    @staticmethod
+    def process_data_range(message):
+        message_str = str(message.text)
+        cursor.execute('''
+                   SELECT weekday, start_time, end_time, classroom, date, location
+                     FROM schedule
+                     WHERE group_id = '1' AND week = ?
+                   ''', (message_str,))
+
+        f = cursor.fetchone()
+        bot.send_message(message.chat.id, f'{f}')
+
 
 
 bot.infinity_polling()
