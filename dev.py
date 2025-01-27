@@ -402,18 +402,35 @@ class ManualWeek:
             date_pattern = r'\d{2}\.\d{2}-\d{2}\.\d{2}'
             bot.answer_callback_query(callback_query_id=call.id, text='Вы выбрали группу Гимназия РУУТ МИИТ')
             message_data = bot.send_message(message.chat.id, f'Введите нужную неделю в формате DD.MM-DD.MM')
-            bot.register_next_step_handler(message_data, ManualWeek.handle_user_input)
+            bot.register_next_step_handler(message_data, ManualWeek.handle_user_input_id_1)
+
+        if call.data == 'id_2':
+            message = call.message
+            message_str = str(message.text)
+            bot.answer_callback_query(callback_query_id=call.id, text='Вы выбрали группу Школа №1273')
+            message_data = bot.send_message(message.chat.id, f'Введите нужную неделю в формате DD.MM-DD.MM')
+            bot.register_next_step_handler(message_data, ManualWeek.handle_user_input_id_2)
+
+
 
     @staticmethod
-    def handle_user_input(message):
+    def handle_user_input_id_1(message):
         date_pattern = r'\d{2}\.\d{2}-\d{2}\.\d{2}'
         if re.match(date_pattern, message.text):
-           ManualWeek.process_data_range(message)
+           ManualWeek.show_id_1(message)
         else:
             bot.reply_to(message, "Некорректный формат даты. Попробуйте еще раз.")
 
     @staticmethod
-    def process_data_range(message):
+    def handle_user_input_id_2(message):
+        date_pattern = r'\d{2}\.\d{2}-\d{2}\.\d{2}'
+        if re.match(date_pattern, message.text):
+            ManualWeek.show_id_2(message)
+        else:
+            bot.reply_to(message, "Некорректный формат даты. Попробуйте еще раз.")
+
+    @staticmethod
+    def show_id_1(message):
         message_str = str(message.text)
         cursor.execute('''
                    SELECT weekday, start_time, end_time, classroom, date, location
@@ -421,8 +438,31 @@ class ManualWeek:
                      WHERE group_id = '1' AND week = ?
                    ''', (message_str,))
 
-        f = cursor.fetchone()
-        bot.send_message(message.chat.id, f'{f}')
+        id_1_data = cursor.fetchone()
+        if id_1_data:
+            bot.send_message(message.chat.id, f'{id_1_data}')
+        else:
+            bot.send_message(message.chat.id, f'Не удалось найти такую идею')
+
+
+
+    @staticmethod
+    def show_id_2(message):
+        message_str = str(message.text)
+
+        cursor.execute('''
+                       SELECT weekday, start_time, end_time, classroom, date, location
+                         FROM schedule
+                         WHERE group_id = '2' AND week = ?
+                       ''', (message_str,))
+
+        id_2_data = cursor.fetchone()
+
+        if id_2_data:
+            bot.send_message(message.chat.id, f'{id_2_data}')
+        else:
+            bot.send_message(message.chat.id, f'Не удалось найти такую идею')
+
 
 
 
