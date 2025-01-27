@@ -383,7 +383,6 @@ class WeekCallData:
 
 class ManualWeek:
 
-
     @bot.message_handler(commands=['schedule'])
     def handle_schedule(message):
         inline_keyboard_db_choose_group = types.InlineKeyboardMarkup(row_width=2)
@@ -394,19 +393,25 @@ class ManualWeek:
                          reply_markup=inline_keyboard_db_choose_group)
 
 
-    @bot.callback_query_handler(func=lambda call: call.data in ['id_1'])
+    @bot.callback_query_handler(func=lambda call: call.data == 'id_1')
     def manual_schedule(call):
+        global id_1
+        id_1 = True
         bot.answer_callback_query(call.id)
         bot.send_message(call.message.chat.id, text=f'Вы выбрали группу Гимназия РУТ МИИТ'
                                                     f'Пожалуйста, введите нужную неделю в формате DD.MM-DD.MM:')
-        return 'id_1'
+        return id_1
 
-    @bot.callback_query_handler(func=lambda call: call.data in ['id_2'])
+
+    @bot.callback_query_handler(func=lambda call: call.data == 'id_2')
     def manual_schedule(call):
+        global id_2
+        id_2 = True
         bot.answer_callback_query(call.id)
         bot.send_message(call.message.chat.id, text=f'Вы выбрали группу Школа 1273'
                                                     f'Пожалуйста, введите нужную неделю в формате DD.MM-DD.MM:')
-        return 'id_2'
+        return id_2
+
 
     @bot.message_handler(func=lambda message: True)
     def handle_message(message):
@@ -414,15 +419,14 @@ class ManualWeek:
         chat_id = message.chat.id
         date_pattern = r'\d{2}\.\d{2}-\d{2}\.\d{2}'
         if re.match(date_pattern, message.text):
+            message_str = str(message.text)
 
-
-
-            if 'id_1':
+            if id_1:
                 cursor.execute('''
-                              SELECT weekday, start_time, end_time, classroom, date, location
-                              FROM schedule
-                              WHERE group_id = '1' AND week BETWEEN ? AND ?
-                              ''', (message.text.split('-')[0], message.text.split('-')[1]))
+                                  SELECT weekday, start_time, end_time, classroom, date, location
+                                  FROM schedule
+                                  WHERE group_id = '1' AND week = ?
+                                  ''', (message_str,))
 
                 schedule_data = cursor.fetchall()
 
@@ -433,21 +437,24 @@ class ManualWeek:
                     bot.send_message(message.chat.id, f'Такой недели не найдено')
                     return None
 
-            if 'id_2':
-                cursor.execute('''
-                              SELECT weekday, start_time, end_time, classroom, date, location
-                              FROM schedule
-                              WHERE group_id = '1' AND week BETWEEN ? AND ?
-                              ''', (message.text.split('-')[0], message.text.split('-')[1]))
+            elif id_2:
+                    cursor.execute('''
+                                  SELECT weekday, start_time, end_time, classroom, date, location
+                                  FROM schedule
+                                  WHERE group_id = '2' AND week BETWEEN ? AND ?
+                                  ''', (message.text.split('-')[0], message.text.split('-')[1]))
 
-                schedule_data = cursor.fetchall()
+                    schedule_data = cursor.fetchall()
 
-                if schedule_data:
-                    bot.send_message(message.chat.id, f'Твое расписание'
-                                                      f'\n{schedule_data}')
-                else:
-                    bot.send_message(message.chat.id, f'Такой недели не найдено')
-                    return None
+                    if schedule_data:
+                        bot.send_message(message.chat.id, f'Твое расписание'
+                                                          f'\n{schedule_data}')
+                    else:
+                        bot.send_message(message.chat.id, f'Такой недели не найдено')
+                        return None
+            else:
+                bot.send_message(message.chat.id, f'Произошла оишбка')
+
 
         elif message.text == '/home':
             bot.send_message(message.chat.id, 'Вы вернулдись на жомашнюю страницу', reply_markup=StartKeyboard.show_start_kb() )
