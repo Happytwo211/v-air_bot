@@ -1,9 +1,7 @@
 import telebot
-from telebot import types
-
 import Keyboard.keyboards
 from TOKEN import Token
-from Keyboard import keyboards
+
 
 bot = telebot.TeleBot(Token.TOKEN)
 
