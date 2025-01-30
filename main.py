@@ -1,10 +1,12 @@
-from Commands.start import register_start
-from Admins import admin_list
-from TOKEN import Token
-from telebot import types
 import os
 import telebot
 import sqlite3
+from Commands.start import register_start
+from Commands.schedule import register_schedule
+from Callback_Data import bot
+from Admins import admin_list
+from TOKEN import Token
+
 
 #Подключение БД
 db_path = os.path.join(os.getcwd(), 'DB/Groups.db')
@@ -15,7 +17,10 @@ cursor = connection.cursor()
 bot = telebot.TeleBot(Token.TOKEN)
 admins = admin_list.admin_id
 
+#commands
 register_start(bot)
+register_schedule(bot)
+
 
 
 if __name__ == "__main__":
