@@ -3,7 +3,7 @@ import telebot
 import sqlite3
 from Commands.start import register_start
 from Commands.schedule import register_schedule
-from Callback_Data.Callback_Data import register_callback
+from Callback_Data.callback_data_start_kb import register_callback
 from Admins import admin_list
 from TOKEN import Token
 
