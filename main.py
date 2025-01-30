@@ -3,7 +3,7 @@ import telebot
 import sqlite3
 from Commands.start import register_start
 from Commands.schedule import register_schedule
-from Callback_Data import bot
+from Callback_Data.Callback_Data import register_callback
 from Admins import admin_list
 from TOKEN import Token
 
@@ -21,6 +21,7 @@ admins = admin_list.admin_id
 register_start(bot)
 register_schedule(bot)
 
+register_callback(bot)
 
 
 if __name__ == "__main__":
