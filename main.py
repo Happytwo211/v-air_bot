@@ -3,7 +3,7 @@ import telebot
 import sqlite3
 from Commands.start import register_start
 from Commands.schedule import register_schedule
-from Callback_Data.callback_data_start_kb import register_callback
+from Callback_Data.callback_data_start_kb import register_callback_start
 from Admins import admin_list
 from TOKEN import Token
 
@@ -21,7 +21,9 @@ admins = admin_list.admin_id
 register_start(bot)
 register_schedule(bot)
 
-register_callback(bot)
+#Обработчики сообщений
+register_callback_start(bot)
+# register_callback_student(bot)
 
 
 if __name__ == "__main__":
