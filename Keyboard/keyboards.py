@@ -51,15 +51,15 @@ def show_tutor_kb():
 
 def choose_group_kb():
     inline_keyboard_db_choose_group = types.InlineKeyboardMarkup()
-    inline_keyboard_db_button_1 = types.InlineKeyboardButton('Гимназия РУТ МИИТ', callback_data='РУТ МИИТ')
-    inline_keyboard_db_button_2 = types.InlineKeyboardButton('Школа №1273', callback_data='1273')
+    inline_keyboard_db_button_1 = types.InlineKeyboardButton('Гимназия РУТ МИИТ', callback_data='miit')
+    inline_keyboard_db_button_2 = types.InlineKeyboardButton('Школа №1273', callback_data='1273 ')
     inline_keyboard_db_choose_group.row(
         inline_keyboard_db_button_1,
         inline_keyboard_db_button_2)
     return inline_keyboard_db_choose_group
 
 def lesson_materials():
-    inline_keyboard_lessona_materials= types.InlineKeyboardMarkup()
-    inline_keyboard_lessona_materials_button_1 = types.InlineKeyboardButton('Твои материалы', 'https://disk.yandex.ru/client/disk')
-    inline_keyboard_lessona_materials.add(inline_keyboard_lessona_materials_button_1)
-    return inline_keyboard_lessona_materials
+    inline_keyboard_lessons_materials= types.InlineKeyboardMarkup()
+    inline_keyboard_lessons_materials_button_1 = types.InlineKeyboardButton('Твои материалы', 'https://disk.yandex.ru/client/disk')
+    inline_keyboard_lessons_materials.add(inline_keyboard_lessons_materials_button_1)
+    return inline_keyboard_lessons_materials
