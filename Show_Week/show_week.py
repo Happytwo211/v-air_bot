@@ -1,7 +1,7 @@
 import sqlite3
 import datetime as dt
 import telebot
-from Keyboard.keyboards import show_schedule_kb
+from Keyboard.keyboards import switch_week_kb
 from TOKEN import Token
 
 
@@ -16,26 +16,28 @@ def change_week(current_date: dt.date, offset: int) -> dt.date:
     return current_date + dt.timedelta(days=offset * 7)
 
 
+# def send_current_week_message(chat_id, group_id: int):
 def send_current_week_message(chat_id, group_id: int):
     today = dt.date.today()
     start_of_week = today - dt.timedelta(days=today.weekday())
     end_of_week = start_of_week + dt.timedelta(days=6)
 
-    query = '''
+    query = ''' 
              SELECT week
              FROM schedule
              WHERE group_id = ? AND date BETWEEN ? AND ?
              '''
     cursor.execute(query, (group_id, start_of_week, end_of_week))
+    print(today,start_of_week,end_of_week)
     current_week = cursor.fetchone()
 
-    # return current_week if current_week else None
+
     if current_week:
         bot.send_message(
             chat_id,
             text=f"Текущая неделя:<blockquote>{current_week[0]}</blockquote>",
             parse_mode='HTML',
-            reply_markup=show_schedule_kb()
+            reply_markup=switch_week_kb()
         )
     else:
         bot.send_message(

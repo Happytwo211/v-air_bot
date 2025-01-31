@@ -33,15 +33,14 @@ def register_callback_student(bot):
         #     bot.register_next_step_handler(call.message, register_callback_miit)
 
 def register_callback_groups(bot):
-    @bot.callback_query_handler(func=lambda call: call.data in ['miit'])
+    @bot.callback_query_handler(func=lambda call: call.data in ['miit', '1273'])
     def bot_send_message(call):
-        chat_id = call.message.chat.id
-        send_current_week_message(chat_id, group_id=1)
+        if call.data == 'miit':
+            chat_id = call.message.chat.id
+            send_current_week_message(chat_id, 1)
+        elif call.data == '1273':
+            chat_id = call.message.chat.id
+            send_current_week_message(chat_id, 2)
 
- # bot.send_message(call.message.chat.id, f'dasda')
-#TODO Cделать group id через инпут юзера
 
-# def register_callback_miit(message):
-#     send_current_week_message(message, '1')
-# def register_callback_miit(message):
-#     send_current_week_message(message, '1')
+
