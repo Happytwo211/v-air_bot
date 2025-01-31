@@ -9,8 +9,8 @@ connection = sqlite3.connect('Groups.db',check_same_thread=False)
 cursor = connection.cursor()
 bot = telebot.TeleBot(Token.TOKEN)
 
-def get_current_date() -> dt.date:
-    return dt.date.today()
+# def get_current_date() -> dt.date:
+#     return dt.date.today()
 
 def change_week(current_date: dt.date, offset: int) -> dt.date:
     return current_date + dt.timedelta(days=offset * 7)
@@ -28,7 +28,6 @@ def send_current_week_message(chat_id, group_id: int):
              WHERE group_id = ? AND date BETWEEN ? AND ?
              '''
     cursor.execute(query, (group_id, start_of_week, end_of_week))
-    print(today,start_of_week,end_of_week)
     current_week = cursor.fetchone()
 
 

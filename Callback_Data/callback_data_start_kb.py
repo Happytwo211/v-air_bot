@@ -3,6 +3,7 @@ from Keyboard.keyboards import show_student_kb, show_tutor_kb, choose_group_kb, 
 from Show_Week.show_week import send_current_week_message
 from TOKEN import Token
 
+
 bot = telebot.TeleBot(Token.TOKEN)
 
 def register_callback_start(bot):
