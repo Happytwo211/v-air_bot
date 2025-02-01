@@ -4,37 +4,39 @@ import telebot
 from Keyboard.keyboards import switch_week_kb
 from TOKEN import Token
 
-
-connection = sqlite3.connect('Groups.db',check_same_thread=False)
+#TODO сделать клаву через реплай меседж текст
+connection = sqlite3.connect('Groups.db', check_same_thread=False)
 cursor = connection.cursor()
 bot = telebot.TeleBot(Token.TOKEN)
 
-# def get_current_date() -> dt.date:
-#     return dt.date.today()
 
-def change_week(current_date: dt.date, offset: int) -> dt.date:
+
+def change_week(offset: int) -> dt.date:
+    current_date = dt.date.today()
     return current_date + dt.timedelta(days=offset * 7)
 
-
-# def send_current_week_message(chat_id, group_id: int):
-def send_current_week_message(chat_id, group_id: int):
-    today = dt.date.today()
+def send_current_week_message(today, chat_id, group_id: int):
     start_of_week = today - dt.timedelta(days=today.weekday())
     end_of_week = start_of_week + dt.timedelta(days=6)
 
-    query = ''' 
+    query = '''
              SELECT week
              FROM schedule
              WHERE group_id = ? AND date BETWEEN ? AND ?
              '''
-    cursor.execute(query, (group_id, start_of_week, end_of_week))
-    current_week = cursor.fetchone()
 
+    cursor.execute(query, (group_id, start_of_week, end_of_week))
+
+    # print(start_of_week,today, end_of_week)
+    # print(group_id)
+    # print(type(start_of_week)), print(type(end_of_week))
+    # print(str(start_of_week))
+    current_week = cursor.fetchall()
 
     if current_week:
         bot.send_message(
             chat_id,
-            text=f"Текущая неделя:<blockquote>{current_week[0]}</blockquote>",
+            text=f"Текущая неделя:<blockquote>{current_week}</blockquote>",
             parse_mode='HTML',
             reply_markup=switch_week_kb()
         )
@@ -42,6 +44,7 @@ def send_current_week_message(chat_id, group_id: int):
         bot.send_message(
             chat_id,
             text="Не удалось найти текущую неделю в расписании.",
-            parse_mode='HTML'
+            parse_mode='HTML',
+            reply_markup=switch_week_kb()
         )
     return current_week if current_week else None

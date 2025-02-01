@@ -4,7 +4,10 @@ import sqlite3
 from Commands.start import register_start
 from Commands.schedule import register_schedule
 from Callback_Data.callback_data_start_kb import (register_callback_start,
-                                                  register_callback_student, register_callback_groups)
+                                                  register_callback_student,
+                                                  register_callback_groups,
+                                                  register_callback_switch_week,
+                                                  handle_callback_group_id)
 from Admins import admin_list
 from TOKEN import Token
 
@@ -26,7 +29,7 @@ register_schedule(bot)
 register_callback_start(bot)
 register_callback_student(bot)
 register_callback_groups(bot)
-
-
+register_callback_switch_week(bot)
+handle_callback_group_id(bot)
 if __name__ == "__main__":
     bot.polling(none_stop=True)

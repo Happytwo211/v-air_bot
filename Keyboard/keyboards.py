@@ -29,8 +29,16 @@ def show_student_kb():
     return inline_keyboard_student
 
 def show_tutor_kb():
-    pass
-
+    inline_kb_tutor = types.InlineKeyboardMarkup(row_width=2)
+    inline_kb_tutor_button_1 = types.InlineKeyboardButton('Отметить посещаемость',
+                                                          callback_data='classroom')
+    inline_kb_tutor_button_2 = types.InlineKeyboardButton('Получить материалы',
+                                                          callback_data='materials')
+    inline_kb_tutor_button_3 = types.InlineKeyboardButton('Еще какая то хуйня',
+                                                          callback_data='huinya')
+    inline_kb_tutor.add(inline_kb_tutor_button_1,
+                        inline_kb_tutor_button_2,inline_kb_tutor_button_3)
+    return inline_kb_tutor
 def choose_group_kb():
     inline_keyboard_db_choose_group = types.InlineKeyboardMarkup(row_width=2)
     inline_keyboard_db_button_1 = types.InlineKeyboardButton('Гимназия РУТ МИИТ', callback_data='miit')
@@ -49,16 +57,15 @@ def lesson_materials():
 
 def switch_week_kb():
     inline_keyboard_switch_week = types.InlineKeyboardMarkup()
-    inline_keyboard_switch_week_button_1= types.InlineKeyboardButton('⬅️',
-                                                                   callback_data='previous_week_MIIT')
+    inline_keyboard_switch_week_button_1 = types.InlineKeyboardButton('⬅️',
+                                                                   callback_data='previous_week')
     inline_keyboard_switch_week_button_2 = types.InlineKeyboardButton('🏠',
-                                                                   callback_data='current_week_MIIT')
+                                                                   callback_data='current_week')
     inline_keyboard_switch_week_button_3 = types.InlineKeyboardButton('➡️',
-                                                                   callback_data='next_week_MIIT')
+                                                                   callback_data='next_week')
     inline_keyboard_switch_week.row(
         inline_keyboard_switch_week_button_1,
         inline_keyboard_switch_week_button_2,
         inline_keyboard_switch_week_button_3
     )
-
     return inline_keyboard_switch_week
