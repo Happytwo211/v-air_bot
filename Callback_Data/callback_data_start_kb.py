@@ -79,7 +79,7 @@ def register_callback_switch_week(bot):
 
     @bot.callback_query_handler(func=lambda call: call.data in ['previous_week', 'current_week', 'next_week'])
     def handle_callback(call):
-
+        call_data = []
         chat_id = call.message.chat.id
         today = dt.date.today()
         print(today)
@@ -92,32 +92,43 @@ def register_callback_switch_week(bot):
 
         elif call.data == 'next_week':
             new_week = change_week(1)
+            print(f'new week : {new_week}')
             send_current_week_message(new_week, chat_id, handle_group_id(call))
             print(f'выззван next')
 
+
         elif call.data == 'current_week':
-            send_current_week_message(today, chat_id, handle_group_id(call))
-            print(today, chat_id, handle_group_id(call))
+            test = send_current_week_message(today, chat_id, handle_group_id(call))
+            start_of_week = today - dt.timedelta(days=today.weekday())
+            end_of_week = start_of_week + dt.timedelta(days=6)
+            print(f'test: {test}')
             print(f'Вызван current')
+
+            if test[1] == start_of_week and test[2] == end_of_week:
+
+                print('call data зарегана')
+                call_data.append('notification')
+                print(call_data[0])
+
+            if call_data[0] == 'notification':
+
+                bot.answer_callback_query(callback_query_id=call.id, text='Вы уже на текущей неделе ')
+
 
         else:
             bot.send_message(chat_id, f'Произошла какая то ошибка')
             return
 
+
+
+
+
 def handle_group_id(call):
-    # group_id = None
-    # result = bot_send_message(call)
-    # if result == 'miit':
-    #     group_id = 1
-    #     print(f'Вызван gr id = 1')
-    # elif result == '1273':
-    #     group_id = 2
-    #     print(f'Вызван gr id = 2')
-    # return group_id
+
     if global_group_id == 1:
         print(global_group_id)
         return 1
-    if global_group_id == 2:
+    elif global_group_id == 2:
         print(global_group_id)
         return 2
 
