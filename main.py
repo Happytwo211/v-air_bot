@@ -14,8 +14,8 @@ from TOKEN import Token
 
 #Подключение БД
 
-connection = sqlite3.connect('db_groups.db',check_same_thread=False)
-cursor = connection.cursor()
+# connection = sqlite3.connect('v_air_db',check_same_thread=False)
+# cursor = connection.cursor()
 
 #Настройки бота и инициализвация
 bot = telebot.TeleBot(Token.TOKEN)
@@ -31,7 +31,7 @@ register_callback_student(bot)
 register_callback_groups(bot)
 register_callback_switch_week(bot)
 
-connection.close()
+# connection.close()
 
 # register_manual_week(bot)
 if __name__ == "__main__":

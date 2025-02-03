@@ -5,13 +5,14 @@ from Keyboard.keyboards import switch_week_kb
 from TOKEN import Token
 
 # TODO сделать клаву через реплай меседж текст
-connection = sqlite3.connect('db_groups.db',check_same_thread=False)
+connection = sqlite3.connect('DB/v_air_db', check_same_thread=False)
 cursor = connection.cursor()
 bot = telebot.TeleBot(Token.TOKEN)
 
 
 def change_week(offset: int) -> dt.date:
     current_date = dt.date.today()
+    print(current_date + dt.timedelta(days= offset *7))
     return current_date + dt.timedelta(days=offset * 7)
 
 
@@ -21,14 +22,14 @@ def send_current_week_message(today, chat_id, group_id: int):
     # result = f'{start_of_week}, {end_of_week}'
     # print(result)
 
-    query_test = '''
-        SELECT *
-        FROM schedule
-        '''
-    cursor.execute(query_test)
-    test = cursor.fetchall()
-    for i in test:
-        print(i)
+    # query_test = '''
+    #     SELECT *
+    #     FROM schedule
+    #     '''
+    # cursor.execute(query_test)
+    # test = cursor.fetchall()
+    # for i in test:
+    #     print(i)
 
     query = '''
              SELECT week
