@@ -1,24 +1,24 @@
 import sqlite3
 from datetime import date
 
-connection = sqlite3.connect('Groups.db',check_same_thread=False)
+connection = sqlite3.connect('db_groups.db',check_same_thread=False)
 cursor = connection.cursor()
 
 #
 # cursor.execute('''
 # ALTER TABLE schedule ADD COLUMN date TEXT;
 # ''')
-cursor.execute('''
-UPDATE schedule
-SET date = '2025-02-01'
-WHERE group_id = 2
-''')
-
 # cursor.execute('''
-# INSERT INTO schedule (group_id, week, weekday, start_time, end_time, classroom, location, date) VALUES
-# (1, '27.01-02.02', 'ЧТ', '16:25', '17:55', 'кабинет 28', '3-я Мытищинская ул., 12, стр. 1', '2025-02-01')
-#
+# UPDATE schedule
+# SET date = '2025-02-01'
+# WHERE group_id = 2
 # ''')
+
+cursor.execute('''
+INSERT INTO schedule (group_id, week, weekday, start_time, end_time, classroom, location, date) VALUES
+(1, 'test', 'ЧТ', 'test', 'test', 'test', '3-я Мытищинская ул., 12, стр. 1', '2025-02-03')
+
+''')
 
 # cursor.execute('''
 # INSERT INTO groups (group_id, group_name, description) VALUES

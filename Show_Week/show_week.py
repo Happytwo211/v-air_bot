@@ -4,20 +4,31 @@ import telebot
 from Keyboard.keyboards import switch_week_kb
 from TOKEN import Token
 
-#TODO сделать клаву через реплай меседж текст
-connection = sqlite3.connect('Groups.db', check_same_thread=False)
+# TODO сделать клаву через реплай меседж текст
+connection = sqlite3.connect('db_groups.db',check_same_thread=False)
 cursor = connection.cursor()
 bot = telebot.TeleBot(Token.TOKEN)
-
 
 
 def change_week(offset: int) -> dt.date:
     current_date = dt.date.today()
     return current_date + dt.timedelta(days=offset * 7)
 
+
 def send_current_week_message(today, chat_id, group_id: int):
     start_of_week = today - dt.timedelta(days=today.weekday())
     end_of_week = start_of_week + dt.timedelta(days=6)
+    # result = f'{start_of_week}, {end_of_week}'
+    # print(result)
+
+    query_test = '''
+        SELECT *
+        FROM schedule
+        '''
+    cursor.execute(query_test)
+    test = cursor.fetchall()
+    for i in test:
+        print(i)
 
     query = '''
              SELECT week
@@ -26,11 +37,6 @@ def send_current_week_message(today, chat_id, group_id: int):
              '''
 
     cursor.execute(query, (group_id, start_of_week, end_of_week))
-
-    # print(start_of_week,today, end_of_week)
-    # print(group_id)
-    # print(type(start_of_week)), print(type(end_of_week))
-    # print(str(start_of_week))
     current_week = cursor.fetchall()
 
     if current_week:
@@ -48,3 +54,4 @@ def send_current_week_message(today, chat_id, group_id: int):
             reply_markup=switch_week_kb()
         )
     return current_week if current_week else None
+
