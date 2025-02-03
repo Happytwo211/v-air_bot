@@ -6,7 +6,7 @@ from Keyboard.keyboards import choose_group_kb
 from TOKEN import Token
 
 
-connection = sqlite3.connect('Groups.db', check_same_thread=False)
+connection = sqlite3.connect('db_groups', check_same_thread=False)
 cursor = connection.cursor()
 bot = telebot.TeleBot(Token.TOKEN)
 # def register_manual_week(bot):

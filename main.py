@@ -13,7 +13,7 @@ from TOKEN import Token
 # from Manual_week.show_manual_week import register_manual_week
 
 #Подключение БД
-# db_path = os.path.join(os.getcwd(), 'DB/Groups.db')
+
 connection = sqlite3.connect('db_groups.db',check_same_thread=False)
 cursor = connection.cursor()
 
@@ -31,7 +31,7 @@ register_callback_student(bot)
 register_callback_groups(bot)
 register_callback_switch_week(bot)
 
-
+connection.close()
 
 # register_manual_week(bot)
 if __name__ == "__main__":
