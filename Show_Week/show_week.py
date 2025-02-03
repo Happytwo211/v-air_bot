@@ -32,7 +32,8 @@ def send_current_week_message(today, chat_id, group_id: int):
     #     print(i)
 
     query = '''
-             SELECT week, weekday, classroom
+             SELECT week, weekday, start_time,
+             end_time, classroom, location
              FROM schedule
              WHERE group_id = ? AND date BETWEEN ? AND ?
              '''
@@ -43,10 +44,16 @@ def send_current_week_message(today, chat_id, group_id: int):
     if current_week:
         bot.send_message(
             chat_id,
-            text=f"Текущая неделя:<blockquote>{current_week[0]}</blockquote>",
+            text=f"Занятия на текущей неделе: "
+                 f"Неделя:<blockquote>{current_week[0][0]}</blockquote>\n"
+                 f"День Недели: <blockquote>{current_week[0][1]}</blockquote>\n"
+                 f"Начало занятия: <blockquote>{current_week[0][2]}</blockquote>\n"
+                 f"Конец занятия: <blockquote>{current_week[0][3]}</blockquote>\n"
+                 f"Аудитория: <blockquote>{current_week[0][4]}</blockquote>\n"
+                 f"Локация: <blockquote>{current_week[0][5]}</blockquote>\n",
+
             parse_mode='HTML',
             reply_markup=switch_week_kb(),
-
         )
         print(f'current week : {current_week[0]}\n'
               f'{query}')
