@@ -73,6 +73,12 @@ def register_callback_student(bot):
             bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id,
                                           reply_markup=lesson_materials())
         elif call.data == 'main_menu':
+            # chat_id = call.message.chat.id
+            message = call.message
+            # chat_id = message.chat.id
+            # message_id = message.message_id
+
+            bot.edit_message_text(chat_id = message.chat.id, message_id = call.message.message_id, text ='Вы вернулись в главное меню')
             bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id,
                                           reply_markup=show_start_kb())
 
