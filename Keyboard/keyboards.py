@@ -56,16 +56,22 @@ def lesson_materials():
     return inline_keyboard_lessons_materials
 
 def switch_week_kb():
-    inline_keyboard_switch_week = types.InlineKeyboardMarkup()
+    inline_keyboard_switch_week = types.InlineKeyboardMarkup(row_width=2)
     inline_keyboard_switch_week_button_1 = types.InlineKeyboardButton('⬅️',
                                                                    callback_data='previous_week')
     inline_keyboard_switch_week_button_2 = types.InlineKeyboardButton('🏠',
                                                                    callback_data='current_week')
     inline_keyboard_switch_week_button_3 = types.InlineKeyboardButton('➡️',
                                                                    callback_data='next_week')
+    inline_keyboard_switch_week_button_4 = types.InlineKeyboardButton('Вернуться в главное меню',
+                                                                      callback_data='main_menu')
+    # inline_keyboard_switch_week.add(inline_keyboard_switch_week_button_1).add(inline_keyboard_switch_week_button_2).add(
+    #     inline_keyboard_switch_week_button_3).add(inline_keyboard_switch_week_button_4)
+
     inline_keyboard_switch_week.row(
         inline_keyboard_switch_week_button_1,
         inline_keyboard_switch_week_button_2,
-        inline_keyboard_switch_week_button_3
-    )
+        inline_keyboard_switch_week_button_3,
+        # inline_keyboard_switch_week_button_4
+    ).add(inline_keyboard_switch_week_button_4)
     return inline_keyboard_switch_week
