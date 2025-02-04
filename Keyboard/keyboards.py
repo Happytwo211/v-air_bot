@@ -51,7 +51,7 @@ def choose_group_kb():
 
 def lesson_materials():
     inline_keyboard_lessons_materials= types.InlineKeyboardMarkup()
-    inline_keyboard_lessons_materials_button_1 = types.InlineKeyboardButton('Твои материалы', 'https://disk.yandex.ru/client/disk')
+    inline_keyboard_lessons_materials_button_1 = types.InlineKeyboardButton('Твои материалы', 'https://disk.yandex.ru/d/2lGOj8eqLQBkcg')
     inline_keyboard_lessons_materials.add(inline_keyboard_lessons_materials_button_1)
     return inline_keyboard_lessons_materials
 

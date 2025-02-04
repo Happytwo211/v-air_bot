@@ -5,6 +5,7 @@ from Keyboard.keyboards import switch_week_kb
 from TOKEN import Token
 
 # TODO сделать клаву через реплай меседж текст
+#todo либо удаление
 connection = sqlite3.connect('DB/v_air_db', check_same_thread=False)
 cursor = connection.cursor()
 bot = telebot.TeleBot(Token.TOKEN)
@@ -40,8 +41,16 @@ def send_current_week_message(today, chat_id, group_id: int):
 
     cursor.execute(query, (group_id, start_of_week, end_of_week))
     current_week = cursor.fetchall()
+    # bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id,
+    #                               reply_markup=show_student_kb())
+
+    # bot.edit_message_text(new_text,
+    #                       chat_id=call.message.chat.id,
+    #                       message_id=call.message.message_id,
+    #                       reply_markup=call.message.reply_markup)
 
     if current_week:
+
         bot.send_message(
             chat_id,
             text=f"Занятия на текущей неделе: "
@@ -55,8 +64,11 @@ def send_current_week_message(today, chat_id, group_id: int):
             parse_mode='HTML',
             reply_markup=switch_week_kb(),
         )
+
         print(f'current week : {current_week[0]}\n'
               f'{query}')
+
+
     else:
         bot.send_message(
             chat_id,

@@ -1,3 +1,4 @@
+#TODO сделать админ панелт для добавления данных в БД
 import os
 import telebot
 import sqlite3
@@ -6,7 +7,7 @@ from Callback_Data.callback_data_start_kb import (register_callback_start,
                                                   register_callback_student,
                                                   register_callback_switch_week,
                                                   register_callback_groups,
-                                                  # bot_send_message
+                                                  register_callback_not_handle
                                                   )
 from Admins import admin_list
 from TOKEN import Token
@@ -18,6 +19,7 @@ from TOKEN import Token
 # cursor = connection.cursor()
 
 #Настройки бота и инициализвация
+
 bot = telebot.TeleBot(Token.TOKEN)
 admins = admin_list.admin_id
 
@@ -30,7 +32,7 @@ register_callback_start(bot)
 register_callback_student(bot)
 register_callback_groups(bot)
 register_callback_switch_week(bot)
-
+register_callback_not_handle(bot)
 # connection.close()
 
 # register_manual_week(bot)

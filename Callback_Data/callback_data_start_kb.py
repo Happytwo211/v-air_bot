@@ -1,6 +1,6 @@
 import telebot
 import datetime as dt
-import sqlite3
+from Admins.admin_list import admin_id
 from Keyboard.keyboards import show_student_kb, show_tutor_kb, choose_group_kb, lesson_materials, show_start_kb
 from Show_Week.show_week import send_current_week_message
 from TOKEN import Token
@@ -11,7 +11,12 @@ bot = telebot.TeleBot(Token.TOKEN)
 
 global_group_id = None
 
+def register_callback_not_handle(bot):
+    @bot.message_handler(content_types=['video', 'audio', 'sticker', 'photo', 'document', 'contact', 'emoji'])
+    def handle_content_types(message):
+        bot.send_message(message.chat.id, f'Бот такое не понимает'
 
+                         f'\nЧто тебе нужно?', reply_markup=choose_group_kb())
 def register_callback_start(bot):
     @bot.callback_query_handler(func=lambda call: call.data in ['student', 'tutor'])
     def callback_handler(call):
@@ -19,8 +24,42 @@ def register_callback_start(bot):
             bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id,
                                           reply_markup=show_student_kb())
         elif call.data == 'tutor':
-            bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id,
-                                          reply_markup=show_tutor_kb())
+            chat_id = call.message.chat.id
+            test_tutor = bot.send_message(chat_id, f'Введите индентификатор преподавателя')
+            bot.register_next_step_handler(test_tutor, passworld)
+
+
+
+def passworld(message):
+
+    if message.from_user.id == 816710725 and message.text == '123123':
+        bot.send_message(message.chat.id, f'Вы зашли в качесве преподавателя', reply_markup=show_tutor_kb())
+        print(f'Был произведен вход'
+              f'{message.from_user.id}')
+
+        return
+
+    else:
+
+        bot.send_message(message.chat.id, f'Вы не препод',
+                                  reply_markup=show_student_kb())
+
+        return
+            # message = call.message
+            # print(message)
+            # if message.from_user.id in admin_id:
+            #
+            #     print(message.from_user.id,admin_id)
+            #     bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id,
+            #                               reply_markup=show_tutor_kb())
+            # else:
+            #     print(message.from_user.id, admin_id)
+            #     chat_id = call.message.chat.id
+            #     bot.send_message(chat_id, f'Вы не препод')
+            #     bot.edit_message_reply_markup(chat_id, call.message.message_id,
+            #                                   reply_markup=show_student_kb())
+
+
 
 def register_callback_student(bot):
     @bot.callback_query_handler(func=lambda call: call.data in ['schedule_student', 'lesson_materials_student',
@@ -44,8 +83,6 @@ def register_callback_groups(bot):
         print(f'вызвана wrapped')
         return bot_send_message(call)
 
-
-
 @bot.callback_query_handler(func=lambda call: call.data in ['miit', '1273'])
 def bot_send_message(call):
     global global_group_id
@@ -57,22 +94,17 @@ def bot_send_message(call):
         global_group_id = group_id
         return send_current_week_message(today, chat_id, group_id)
 
-
     elif call.data == '1273':
         group_id = 2
         print(f'Вызвана bot_send_message')
         global_group_id = group_id
         return send_current_week_message(today, chat_id, group_id)
 
-
-
 def handle_callback_group_id(bot):
     @bot.callback_query_handler(func=lambda call: call.data in ['miit', '1273'])
     def wrapped_handle_group_id(call):
         print('Вызван wrapped gr id')
         return handle_group_id(call)
-
-
 
 
 def register_callback_switch_week(bot):
@@ -118,9 +150,6 @@ def register_callback_switch_week(bot):
         else:
             bot.send_message(chat_id, f'Произошла какая то ошибка')
             return
-
-
-
 
 
 def handle_group_id(call):
