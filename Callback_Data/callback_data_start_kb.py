@@ -47,7 +47,7 @@ def passworld(message):
     else:
 
         bot.send_message(message.chat.id, f'Вы не препод',
-                                  reply_markup=show_student_kb())
+                                  reply_markup=show_start_kb())
         return
 
 
@@ -158,5 +158,3 @@ def handle_group_id(call):
     elif global_group_id == 2:
         print(global_group_id)
         return 2
-
-

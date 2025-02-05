@@ -81,3 +81,13 @@ def main_menu_kb():
     inline_keyboard_main_menu = types.InlineKeyboardMarkup()
     inline_keyboard_main_menu_button = types.InlineKeyboardButton("Вернуться в главное меню", callback_data='main_menu')
     inline_keyboard_main_menu.add(inline_keyboard_main_menu_button)
+
+def choose_group_tutor_kb():
+    inline_keyboard_db_choose_group = types.InlineKeyboardMarkup(row_width=2)
+    inline_keyboard_db_button_1 = types.InlineKeyboardButton('Гимназия РУТ МИИТ', callback_data='miit_tutor')
+    inline_keyboard_db_button_2 = types.InlineKeyboardButton('Школа №1273', callback_data='1273_tutor')
+    inline_keyboard_db_button_3 = types.InlineKeyboardButton('Вернуться в главное меню', callback_data='main_menu')
+    inline_keyboard_db_choose_group.add(inline_keyboard_db_button_1,
+    inline_keyboard_db_button_2, inline_keyboard_db_button_3)
+    # inline_keyboard_db_choose_group.add(inline_keyboard_db_button_1).add(inline_keyboard_db_button_2).add(inline_keyboard_db_button_3)
+    return inline_keyboard_db_choose_group
