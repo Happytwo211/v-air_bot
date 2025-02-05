@@ -1,7 +1,7 @@
 import telebot
 import datetime as dt
 from Admins.admin_list import admin_id
-from Keyboard.keyboards import show_student_kb, show_tutor_kb, choose_group_kb, lesson_materials, show_start_kb
+from Keyboard.keyboards import show_student_kb, show_tutor_kb, choose_group_kb, lesson_materials, show_start_kb, main_menu_kb
 from Show_Week.show_week import send_current_week_message
 from TOKEN import Token
 from Show_Week.show_week import change_week
@@ -25,39 +25,30 @@ def register_callback_start(bot):
                                           reply_markup=show_student_kb())
         elif call.data == 'tutor':
             chat_id = call.message.chat.id
-            test_tutor = bot.send_message(chat_id, f'Введите индентификатор преподавателя')
+            test_tutor = bot.send_message(chat_id, f'Введите индентификатор преподавателя', reply_markup = main_menu_kb())
             bot.register_next_step_handler(test_tutor, passworld)
 
 
 
 def passworld(message):
 
-    if message.from_user.id == 816710725 and message.text == '123123':
-        bot.send_message(message.chat.id, f'Вы зашли в качесве преподавателя', reply_markup=show_tutor_kb())
-        print(f'Был произведен вход'
+    if message.from_user.id == 1077710198 and message.text == '123123':
+    # if message.text == '123123':
+        bot.send_message(message.chat.id, f'Вы зашли в качесве преподавателя владика хуеоса', reply_markup=show_tutor_kb())
+        print(f'Был произведен вход за влада'
               f'{message.from_user.id}')
 
         return
-
+    elif message.from_user.id == 816710725 and message.text == '321321':
+        bot.send_message(message.chat.id, f'Вы зашли в качесве преподавателя лавного админа',
+                         reply_markup=show_tutor_kb())
+        print(f'Был произведен вход за влада'
+              f'{message.from_user.id}')
     else:
 
         bot.send_message(message.chat.id, f'Вы не препод',
                                   reply_markup=show_student_kb())
-
         return
-            # message = call.message
-            # print(message)
-            # if message.from_user.id in admin_id:
-            #
-            #     print(message.from_user.id,admin_id)
-            #     bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id,
-            #                               reply_markup=show_tutor_kb())
-            # else:
-            #     print(message.from_user.id, admin_id)
-            #     chat_id = call.message.chat.id
-            #     bot.send_message(chat_id, f'Вы не препод')
-            #     bot.edit_message_reply_markup(chat_id, call.message.message_id,
-            #                                   reply_markup=show_student_kb())
 
 
 
@@ -73,14 +64,15 @@ def register_callback_student(bot):
             bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id,
                                           reply_markup=lesson_materials())
         elif call.data == 'main_menu':
-            # chat_id = call.message.chat.id
-            message = call.message
-            # chat_id = message.chat.id
-            # message_id = message.message_id
 
-            bot.edit_message_text(chat_id = message.chat.id, message_id = call.message.message_id, text ='Вы вернулись в главное меню')
-            bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id,
-                                          reply_markup=show_start_kb())
+            message = call.message
+            try:
+
+                bot.edit_message_text(chat_id = message.chat.id, message_id = call.message.message_id, text ='Вы вернулись в главное меню')
+                bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id,
+                                              reply_markup=show_start_kb())
+            except telebot.apihelper.ApiTelegramException:
+                bot.send_message(message.chat.id, f'Вы вернулись в главное меню', reply_markup = show_start_kb())
 
 def register_callback_groups(bot):
     # TODO bug
