@@ -34,8 +34,8 @@ def show_tutor_kb():
                                                           callback_data='classroom')
     inline_kb_tutor_button_2 = types.InlineKeyboardButton('Получить материалы',
                                                           callback_data='materials')
-    inline_kb_tutor_button_3 = types.InlineKeyboardButton('Еще какая то хуйня',
-                                                          callback_data='huinya')
+    inline_kb_tutor_button_3 = types.InlineKeyboardButton('Вернуться в главное меню',
+                                                          callback_data='main_menu')
     inline_kb_tutor.add(inline_kb_tutor_button_1,
                         inline_kb_tutor_button_2,inline_kb_tutor_button_3)
     return inline_kb_tutor
@@ -52,7 +52,8 @@ def choose_group_kb():
 def lesson_materials():
     inline_keyboard_lessons_materials= types.InlineKeyboardMarkup()
     inline_keyboard_lessons_materials_button_1 = types.InlineKeyboardButton('Твои материалы', 'https://disk.yandex.ru/d/2lGOj8eqLQBkcg')
-    inline_keyboard_lessons_materials.add(inline_keyboard_lessons_materials_button_1)
+    inline_keyboard_lessons_materials_button_2 = types.InlineKeyboardButton('Вернуться в главное меню', callback_data='main_menu')
+    inline_keyboard_lessons_materials.add(inline_keyboard_lessons_materials_button_1).add(inline_keyboard_lessons_materials_button_2)
     return inline_keyboard_lessons_materials
 
 def switch_week_kb():
@@ -75,3 +76,8 @@ def switch_week_kb():
         # inline_keyboard_switch_week_button_4
     ).add(inline_keyboard_switch_week_button_4)
     return inline_keyboard_switch_week
+
+def main_menu_kb():
+    inline_keyboard_main_menu = types.InlineKeyboardMarkup()
+    inline_keyboard_main_menu_button = types.InlineKeyboardButton("Вернуться в главное меню", callback_data='main_menu')
+    inline_keyboard_main_menu.add(inline_keyboard_main_menu_button)
