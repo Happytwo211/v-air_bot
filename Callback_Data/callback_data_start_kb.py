@@ -2,7 +2,7 @@ import telebot
 import datetime as dt
 from Keyboard.tutor_kb import show_tutor_kb_buttons
 from Admins.admin_list import admin_id
-from Keyboard.keyboards import show_student_kb, show_tutor_kb, choose_group_kb, lesson_materials, show_start_kb, main_menu_kb
+from Keyboard.keyboards import show_student_kb,choose_group_kb, lesson_materials, show_start_kb, main_menu_kb
 from Show_Week.show_week import send_current_week_message
 from TOKEN import Token
 from Show_Week.show_week import change_week
@@ -29,8 +29,6 @@ def register_callback_start(bot):
             test_tutor = bot.send_message(chat_id, f'Введите индентификатор преподавателя', reply_markup = main_menu_kb())
             bot.register_next_step_handler(test_tutor, passworld)
 
-
-
 def passworld(message):
 
     if message.from_user.id == 1077710198 and message.text == '123123':
@@ -54,8 +52,6 @@ def passworld(message):
         bot.send_message(message.chat.id, f'Вы не препод',
                                   reply_markup=show_start_kb())
         return
-
-
 
 def register_callback_student(bot):
     @bot.callback_query_handler(func=lambda call: call.data in ['schedule_student', 'lesson_materials_student',
