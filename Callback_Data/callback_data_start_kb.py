@@ -1,5 +1,6 @@
 import telebot
 import datetime as dt
+from Keyboard.tutor_kb import show_tutor_kb_buttons
 from Admins.admin_list import admin_id
 from Keyboard.keyboards import show_student_kb, show_tutor_kb, choose_group_kb, lesson_materials, show_start_kb, main_menu_kb
 from Show_Week.show_week import send_current_week_message
@@ -34,15 +35,19 @@ def passworld(message):
 
     if message.from_user.id == 1077710198 and message.text == '123123':
     # if message.text == '123123':
-        bot.send_message(message.chat.id, f'Вы зашли в качесве преподавателя владика хуеоса', reply_markup=show_tutor_kb())
+        bot.send_message(message.chat.id, f'Вы зашли в качесве преподавателя препода Влада'
+                                          f'Выбери группу', reply_markup=show_tutor_kb_buttons())
         print(f'Был произведен вход за влада'
               f'{message.from_user.id}')
 
         return
     elif message.from_user.id == 816710725 and message.text == '321321':
-        bot.send_message(message.chat.id, f'Вы зашли в качесве преподавателя лавного админа',
-                         reply_markup=show_tutor_kb())
-        print(f'Был произведен вход за влада'
+        bot.send_message(message.chat.id, f'Вы зашли в качесве преподавателя лавного админа'
+                                          f'выбери группу',
+                         reply_markup=show_tutor_kb_buttons())
+                         # reply_markup=show_tutor_kb())
+
+        print(f'Был произведен вход за главного админа'
               f'{message.from_user.id}')
     else:
 

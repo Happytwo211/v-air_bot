@@ -1,48 +1,47 @@
 import sqlite3
 import datetime as dt
 import telebot
-from Keyboard.keyboards import switch_week_kb
+from Keyboard.tutor_kb import show_tutor_kb_buttons
 from TOKEN import Token
 
-# TODO сделать клаву через реплай меседж текст
-# todo либо удаление
 connection = sqlite3.connect('DB/v_air_db', check_same_thread=False)
 cursor = connection.cursor()
 bot = telebot.TeleBot(Token.TOKEN)
 
-
 def register_tutor(bot):
-    @bot.callback_query_handler(func=lambda call: call.data in ['classroom'])
-    def send_tutor_kb(call):
+    @bot.callback_query_handler(func=lambda call: call.data in ['tutor_miit', 'tutor_1273'])
+    def send_current_week_message(call):
         chat_id = call.message.chat.id
 
         query = '''
-                     SELECT *
-                     FROM tutor
+                                      SELECT *
+                                      FROM tutor
+                                      WHERE group_id = ?
+                                      '''
 
-                     '''
+        if call.data == 'tutor_miit':
 
-        cursor.execute(query)
-        current_week = cursor.fetchall()
+            group_id = 1
+            cursor.execute(query, (group_id,))
+            group_tutor_data = cursor.fetchall()
 
-        if current_week:
+            bot.send_message(chat_id, f'ты выбрал группу МИИТ\n'
+                                      f'{group_tutor_data}',
+                             reply_markup=show_tutor_kb_buttons())
+            return group_id
 
-            message_text = "Занятия на текущей неделе:\n\n"
-            for item in current_week:
-                message_text += f"<blockquote>{item}</blockquote>\n"
+        elif call.data == 'tutor_1273':
 
-            bot.send_message(
-                chat_id,
-                text=message_text,
-                parse_mode='HTML',
-                # reply_markup=switch_week_kb(),
-            )
+            group_id = 2
+            cursor.execute(query, (group_id,))
+            group_tutor_data = cursor.fetchall()
+            bot.send_message(chat_id, f' Ты выбрал группу 1273'
+                                      f'{group_tutor_data}',
+                             reply_markup=show_tutor_kb_buttons())
+
+            return group_id
 
         else:
-            bot.send_message(
-                chat_id,
-                text="Ошибка.",
-                parse_mode='HTML',
-                # reply_markup=switch_week_kb()
-            )
-        return current_week if current_week else None
+            bot.send_message(chat_id, f'Произошла ошибочка',
+                             reply_markup=show_tutor_kb_buttons())
+
