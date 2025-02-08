@@ -45,7 +45,8 @@ def register_tutor(bot):
 
         message_text = (f'Группа\n'
                         f'<blockquote>МИИТ</blockquote>\n'
-                        f'\nНеделя: <blockquote>{start_of_week}-{end_of_week}</blockquote>\n')
+                        f'\nНеделя: <blockquote>{start_of_week}-{end_of_week}</blockquote>\n'
+                        f'\n')
 
         for data in group_tutor_data:
             message_text += '<blockquote>{}</blockquote>\n'.format(data)
