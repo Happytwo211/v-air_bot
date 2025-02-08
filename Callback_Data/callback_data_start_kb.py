@@ -1,7 +1,8 @@
 import telebot
 import datetime as dt
+from Keyboard.tutor_kb import show_tutor_kb_buttons
 from Admins.admin_list import admin_id
-from Keyboard.keyboards import show_student_kb, show_tutor_kb, choose_group_kb, lesson_materials, show_start_kb, main_menu_kb
+from Keyboard.keyboards import show_student_kb,choose_group_kb, lesson_materials, show_start_kb, main_menu_kb
 from Show_Week.show_week import send_current_week_message
 from TOKEN import Token
 from Show_Week.show_week import change_week
@@ -28,29 +29,29 @@ def register_callback_start(bot):
             test_tutor = bot.send_message(chat_id, f'Введите индентификатор преподавателя', reply_markup = main_menu_kb())
             bot.register_next_step_handler(test_tutor, passworld)
 
-
-
 def passworld(message):
 
     if message.from_user.id == 1077710198 and message.text == '123123':
     # if message.text == '123123':
-        bot.send_message(message.chat.id, f'Вы зашли в качесве преподавателя владика хуеоса', reply_markup=show_tutor_kb())
+        bot.send_message(message.chat.id, f'Вы зашли в качесве преподавателя препода Влада'
+                                          f'Выбери группу', reply_markup=show_tutor_kb_buttons())
         print(f'Был произведен вход за влада'
               f'{message.from_user.id}')
 
         return
     elif message.from_user.id == 816710725 and message.text == '321321':
-        bot.send_message(message.chat.id, f'Вы зашли в качесве преподавателя лавного админа',
-                         reply_markup=show_tutor_kb())
-        print(f'Был произведен вход за влада'
+        bot.send_message(message.chat.id, f'Вы зашли в качесве преподавателя лавного админа'
+                                          f'выбери группу',
+                         reply_markup=show_tutor_kb_buttons())
+                         # reply_markup=show_tutor_kb())
+
+        print(f'Был произведен вход за главного админа'
               f'{message.from_user.id}')
     else:
 
         bot.send_message(message.chat.id, f'Вы не препод',
-                                  reply_markup=show_student_kb())
+                                  reply_markup=show_start_kb())
         return
-
-
 
 def register_callback_student(bot):
     @bot.callback_query_handler(func=lambda call: call.data in ['schedule_student', 'lesson_materials_student',
@@ -158,5 +159,3 @@ def handle_group_id(call):
     elif global_group_id == 2:
         print(global_group_id)
         return 2
-
-

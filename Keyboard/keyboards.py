@@ -28,17 +28,6 @@ def show_student_kb():
         inline_keyboard_student_button_3)
     return inline_keyboard_student
 
-def show_tutor_kb():
-    inline_kb_tutor = types.InlineKeyboardMarkup(row_width=2)
-    inline_kb_tutor_button_1 = types.InlineKeyboardButton('Отметить посещаемость',
-                                                          callback_data='classroom')
-    inline_kb_tutor_button_2 = types.InlineKeyboardButton('Получить материалы',
-                                                          callback_data='materials')
-    inline_kb_tutor_button_3 = types.InlineKeyboardButton('Вернуться в главное меню',
-                                                          callback_data='main_menu')
-    inline_kb_tutor.add(inline_kb_tutor_button_1,
-                        inline_kb_tutor_button_2,inline_kb_tutor_button_3)
-    return inline_kb_tutor
 def choose_group_kb():
     inline_keyboard_db_choose_group = types.InlineKeyboardMarkup(row_width=2)
     inline_keyboard_db_button_1 = types.InlineKeyboardButton('Гимназия РУТ МИИТ', callback_data='miit')
@@ -81,3 +70,6 @@ def main_menu_kb():
     inline_keyboard_main_menu = types.InlineKeyboardMarkup()
     inline_keyboard_main_menu_button = types.InlineKeyboardButton("Вернуться в главное меню", callback_data='main_menu')
     inline_keyboard_main_menu.add(inline_keyboard_main_menu_button)
+
+
+

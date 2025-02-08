@@ -26,6 +26,36 @@ def register_tutor(bot):
                                       FROM tutor
                                       WHERE group_id = ? and date BETWEEN ? AND ?
                                       '''
+        if call.data == 'tutor_miit':
+
+            group_id = 1
+            message_text = (f'Группа\n'
+                            f'<blockquote>МИИТ</blockquote>\n'
+                            f'\nНеделя:\n <blockquote>{start_of_week}-{end_of_week}</blockquote>')
+
+            for data in group_tutor_data:
+                message_text += '<blockquote>{}</blockquote>\n'.format(data)
+
+            bot.send_message(chat_id, f'{message_text}', parse_mode='HTML')
+
+        cursor.execute(query, (group_id, start_of_week, end_of_week))
+        group_tutor_data = cursor.fetchall()
+
+        message_text = (f'Группа\n'
+                        f'<blockquote>МИИТ</blockquote>\n'
+                        f'\nНеделя:\n <blockquote>{start_of_week}-{end_of_week}</blockquote>')
+
+        for data in group_tutor_data:
+            message_text += '<blockquote>{}</blockquote>\n'.format(data)
+
+        bot.send_message(chat_id, f'{message_text}', parse_mode='HTML')
+        # bot.send_message(chat_id, f'<blockquote>{data[0],data[1],data[2]}</blockquote>', parse_mode='HTML')
+
+        bot.send_message(chat_id, f'Выбери функционал', reply_markup=show_tutor_kb())
+
+
+
+
 
         if call.data == 'tutor_miit':
 
@@ -37,7 +67,6 @@ def register_tutor(bot):
             message_text = (f'Группа\n'
                       f'<blockquote>МИИТ</blockquote>\n'
                       f'\nНеделя:\n <blockquote>{start_of_week}-{end_of_week}</blockquote>')
-
 
             for data in group_tutor_data:
                 message_text +='<blockquote>{}</blockquote>\n'.format(data)
@@ -65,6 +94,7 @@ def register_tutor(bot):
             # bot.send_message(chat_id, f'<blockquote>{data[0],data[1],data[2]}</blockquote>', parse_mode='HTML')
 
             bot.send_message(chat_id, f'Выбери функционал', reply_markup=show_tutor_kb())
+
         else:
             bot.send_message(chat_id, f'Произошла ошибочка')
 
