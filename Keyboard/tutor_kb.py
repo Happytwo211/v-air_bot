@@ -13,8 +13,9 @@ def show_tutor_kb():
                                                           callback_data='attendance')
     inline_kb_tutor_button_2 = types.InlineKeyboardButton('Получить материалы',
                                                           callback_data='materials')
+    inline_kb_tutor_button_3 = types.InlineKeyboardButton('Поменять неделю', callback_data='change_week_tutor')
 
     inline_kb_tutor.add(inline_kb_tutor_button_1,
-                        inline_kb_tutor_button_2)
+                        inline_kb_tutor_button_2, inline_kb_tutor_button_3)
     return inline_kb_tutor
 
