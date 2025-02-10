@@ -1,8 +1,8 @@
 #TODO сделать админ панелт для добавления данных в БД
 
 import telebot
-from Show_tutors_mat.show_tutor_materials import register_tutor
-
+# from Show_tutors_mat.show_tutor_materials import register_tutor
+from Show_tutors_mat.test import register_tutor_group_id, register_tutor
 from Commands.start import register_start
 from Admins import admin_list
 from TOKEN import Token
@@ -38,8 +38,10 @@ register_callback_switch_week(bot)
 register_callback_not_handle(bot)
 
 #Функции препода
+# register_tutor(bot)
 register_tutor(bot)
-
+register_tutor_group_id(bot)
+#test
 
 # register_manual_week(bot)
 if __name__ == "__main__":

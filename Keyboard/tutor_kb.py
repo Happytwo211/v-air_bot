@@ -8,7 +8,7 @@ def show_tutor_kb_buttons():
 
 
 def show_tutor_kb():
-    inline_kb_tutor = types.InlineKeyboardMarkup(row_width=2)
+    inline_kb_tutor = types.InlineKeyboardMarkup(row_width=1)
     inline_kb_tutor_button_1 = types.InlineKeyboardButton('Отметить посещаемость',
                                                           callback_data='attendance')
     inline_kb_tutor_button_2 = types.InlineKeyboardButton('Получить материалы',

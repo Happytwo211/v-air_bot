@@ -13,6 +13,7 @@ bot = telebot.TeleBot(Token.TOKEN)
 
 def change_week(offset: int) -> dt.date:
     current_date = dt.date.today()
+    print(f'change week:')
     print(current_date + dt.timedelta(days= offset *7))
     return current_date + dt.timedelta(days=offset * 7)
 
