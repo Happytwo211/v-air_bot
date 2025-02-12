@@ -1,9 +1,10 @@
 import sqlite3
 import datetime as dt
 import telebot
+import re
 from Keyboard.tutor_kb import show_tutor_kb
 from TOKEN import Token
-
+#TODO после выбора недели сделать выбор даты и только потом уже выбор отметчки учеников
 connection = sqlite3.connect('DB/v_air_db', check_same_thread=False)
 cursor = connection.cursor()
 bot = telebot.TeleBot(Token.TOKEN)
@@ -32,7 +33,6 @@ def group_id_tutor(call):
 def register_tutor(bot):
     @bot.callback_query_handler(func=lambda call: call.data in ['tutor_miit', 'tutor_1273'])
     def send_current_week_message(call):
-        #def change_week
         chat_id = call.message.chat.id
         group_id = group_id_tutor(call)
         date = dt.date.today()
@@ -84,29 +84,33 @@ def change_week_tutor(bot):
                       '''
         cursor.execute(query, (group_id[0],))
         group_tutor_data = cursor.fetchall()
-        print(group_tutor_data[0])
+
 
         message_text = (f'\nДоступные недели\n')
 
         for data in group_tutor_data:
             cleaned_data = ''.join(data).strip("()'")
             message_text += f'<code>{cleaned_data}</code>\n'.format(data)
-            # message_text += '<code>{}</code>\n'.format(data)
-
-        bot.send_message(chat_id, f'{message_text}', parse_mode='HTML')
 
 
+        register = bot.send_message(chat_id, f'{message_text}', parse_mode='HTML')
+
+        bot.register_next_step_handler(message, change_week_tutor)
 
 
 
-        # query_2 = '''
-        #         SELECT week
-        #         FROM tutor
-        #         WHERE week = ?
-        #         '''
-        # week = message.text
-        # cursor.execute(query_2, (week,))
-        # manual_week = cursor.fetchall()
-        #
-        #
-        # # message.text ==
+    def change_week_tutor(message):
+        week = message.text
+
+        query = '''
+                      SELECT student_name, date, attendance 
+                      FROM tutor
+                      WHERE group_id = ? and week = ?
+                      '''
+
+
+        cursor.execute(query, (group_id[0], week,))
+        group_tutor_data = cursor.fetchall()
+
+        bot.send_message(message.chat.id, f'Неделя : <blockquote>{week}</blockquote>\n<blockquote>{group_tutor_data}</blockquote>', parse_mode="HTML")
+
