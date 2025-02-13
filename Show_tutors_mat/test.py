@@ -60,7 +60,7 @@ def register_tutor(bot):
 
         for data in group_tutor_data:
             cleaned_data = ''.join(data).strip("()'")
-            message_text += f'<blockquote>{cleaned_data}</blockquote>\n'.format(data)
+            message_text += f'<сode>{cleaned_data}</code>\n'.format(data)
 
         bot.send_message(chat_id, f'{message_text}', parse_mode='HTML')
         bot.send_message(chat_id, f'Выбери функционал', reply_markup=show_tutor_kb())
