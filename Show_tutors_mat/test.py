@@ -1,7 +1,7 @@
 import sqlite3
 import datetime as dt
 import telebot
-import re
+import types
 from Keyboard.tutor_kb import show_tutor_kb
 from TOKEN import Token
 #TODO после выбора недели сделать выбор даты и только потом уже выбор отметчки учеников
@@ -54,15 +54,15 @@ def register_tutor(bot):
 
 
         message_text = (
-                        f'\nНеделя: <blockquote>{start_of_week}-{end_of_week}</blockquote>\n'
+                        f'\nНеделя: <blockquote>{start_of_week}-{end_of_week}</blockquote>\nДаты занятий:\n'
                         f'\n'
         )
 
         for data in group_tutor_data:
             cleaned_data = ''.join(data).strip("()'")
-            message_text += f'<сode>{cleaned_data}</code>\n'.format(data)
+            message_text += f'<code>{cleaned_data}</code>\n'.format(data)
 
-        bot.send_message(chat_id, f'{message_text}', parse_mode='HTML')
+        bot.send_message(chat_id, f'\n{message_text}', parse_mode='HTML')
         bot.send_message(chat_id, f'Выбери функционал', reply_markup=show_tutor_kb())
 
 
@@ -86,7 +86,7 @@ def change_week_tutor(bot):
         group_tutor_data = cursor.fetchall()
 
 
-        message_text = (f'\nДоступные недели\n')
+        message_text = (f'\nДоступные недели')
 
         for data in group_tutor_data:
             cleaned_data = ''.join(data).strip("()'")
@@ -103,16 +103,24 @@ def change_week_tutor(bot):
         week = message.text
 
         query = '''
-                      SELECT student_name, date, attendance 
+                      SELECT date
                       FROM tutor
                       WHERE group_id = ? and week = ?
                 '''
 
 
-        cursor.execute(query, (group_id[0], week,))
-        group_tutor_data = cursor.fetchall()
+        try:
+            cursor.execute(query, (group_id[0], week,))
+            group_tutor_data = cursor.fetchall()
+        except sqlite3.ProgrammingError:
+            bot.send_message(message.chat.id, f'Ошибка!')
         if group_tutor_data:
-            bot.send_message(message.chat.id, f'Неделя : <blockquote>{week}</blockquote>\n<blockquote>{group_tutor_data}</blockquote>', parse_mode="HTML")
+            for data in group_tutor_data:
+                message_text = f''
+                cleaned_data = ''.join(data).strip("()'")
+                message_text += f'<code>{cleaned_data}</code>\n'.format(data)
+                bot.send_message(message.chat.id, f'Неделя : <blockquote>{week}</blockquote>\nДаты занятий:\n<code>{cleaned_data}</code>',
+                                 parse_mode="HTML", reply_markup=show_tutor_kb())
         else:
             bot.send_message(message.chat.id, f'Такой недели нет')
 
