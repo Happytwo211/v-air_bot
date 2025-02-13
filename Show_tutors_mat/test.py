@@ -73,8 +73,7 @@ def change_week_tutor(bot):
         chat_id = call.message.chat.id
         message = call.message
         bot.send_message(chat_id,f'Выбери нужную неделю')
-        #
-        # print(f'group_id\n{group_id}')
+
 
         query = '''
                       SELECT week
@@ -106,7 +105,7 @@ def change_week_tutor(bot):
                       SELECT student_name, date, attendance 
                       FROM tutor
                       WHERE group_id = ? and week = ?
-                      '''
+                '''
 
 
         cursor.execute(query, (group_id[0], week,))
@@ -114,3 +113,5 @@ def change_week_tutor(bot):
 
         bot.send_message(message.chat.id, f'Неделя : <blockquote>{week}</blockquote>\n<blockquote>{group_tutor_data}</blockquote>', parse_mode="HTML")
 
+#осещаемость
+# если был, то апдейт колумн
