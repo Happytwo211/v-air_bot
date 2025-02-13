@@ -40,7 +40,7 @@ def register_tutor(bot):
         end_of_week = start_of_week + dt.timedelta(days=6)
 
         query = '''
-              SELECT student_name, date, attendance 
+              SELECT date
               FROM tutor
               WHERE group_id = ? and date BETWEEN ? AND ?
               '''
@@ -59,7 +59,8 @@ def register_tutor(bot):
         )
 
         for data in group_tutor_data:
-            message_text += '<blockquote>{}</blockquote>\n'.format(data)
+            cleaned_data = ''.join(data).strip("()'")
+            message_text += f'<blockquote>{cleaned_data}</blockquote>\n'.format(data)
 
         bot.send_message(chat_id, f'{message_text}', parse_mode='HTML')
         bot.send_message(chat_id, f'Выбери функционал', reply_markup=show_tutor_kb())
@@ -110,8 +111,10 @@ def change_week_tutor(bot):
 
         cursor.execute(query, (group_id[0], week,))
         group_tutor_data = cursor.fetchall()
-
-        bot.send_message(message.chat.id, f'Неделя : <blockquote>{week}</blockquote>\n<blockquote>{group_tutor_data}</blockquote>', parse_mode="HTML")
+        if group_tutor_data:
+            bot.send_message(message.chat.id, f'Неделя : <blockquote>{week}</blockquote>\n<blockquote>{group_tutor_data}</blockquote>', parse_mode="HTML")
+        else:
+            bot.send_message(message.chat.id, f'Такой недели нет')
 
 #осещаемость
 # если был, то апдейт колумн
