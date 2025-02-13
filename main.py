@@ -2,7 +2,7 @@
 
 import telebot
 # from Show_tutors_mat.show_tutor_materials import register_tutor
-from Show_tutors_mat.test import register_tutor_group_id, register_tutor,change_week_tutor
+from Show_tutors_mat.test import register_tutor_group_id, register_tutor, change_week_tutor, change_group_tutor
 from Commands.start import register_start
 from Admins import admin_list
 from TOKEN import Token
@@ -42,7 +42,7 @@ register_callback_not_handle(bot)
 register_tutor(bot)
 register_tutor_group_id(bot)
 change_week_tutor(bot)
-#test
+change_group_tutor(bot)
 
 # register_manual_week(bot)
 if __name__ == "__main__":
