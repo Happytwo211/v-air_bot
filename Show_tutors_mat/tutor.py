@@ -100,9 +100,16 @@ def change_week_tutor(bot):
 
         message_text = (f'\nДоступные недели')
 
-        for data in group_tutor_data:
-            cleaned_data = ''.join(data).strip("()'")
-            message_text += f'<code>{cleaned_data}</code>\n'.format(data)
+
+        try:
+
+            for data in group_tutor_data:
+                cleaned_data = ''.join(data).strip("()'")
+                message_text += f'<code>{cleaned_data}</code>\n'.format(data)
+
+        except TypeError:
+            message_text = f'Нет доступных дат'
+
 
 
         register = bot.send_message(chat_id, f'{message_text}', parse_mode='HTML', reply_markup=show_tutor_kb())
