@@ -2,9 +2,10 @@ import sqlite3
 import datetime as dt
 import telebot
 import types
+import re
 from Keyboard.tutor_kb import show_tutor_kb, show_tutor_kb_buttons
 from TOKEN import Token
-#TODO после выбора недели сделать выбор даты и только потом уже выбор отметчки учеников
+
 connection = sqlite3.connect('DB/v_air_db', check_same_thread=False)
 cursor = connection.cursor()
 bot = telebot.TeleBot(Token.TOKEN)
@@ -51,18 +52,21 @@ def register_tutor(bot):
         group_tutor_data = cursor.fetchall()
         print(group_tutor_data)
 
-
+        #test
+        start_of_week_str = str(start_of_week)
+        end_of_week_str= str(end_of_week)
 
         message_text = (
-                        f'\nНеделя: <blockquote>{start_of_week}-{end_of_week}</blockquote>\nДаты занятий:\n'
-                        f'\n'
+                        f'\nНеделя 1: <blockquote>{start_of_week_str[8:]}.{start_of_week_str[5:7]}-{end_of_week_str[8:]}.{end_of_week_str[5:7]}</blockquote>\nДаты занятий:\n'
+
         )
 
         for data in group_tutor_data:
             cleaned_data = ''.join(data).strip("()'")
             message_text += f'<code>{cleaned_data}</code>\n'.format(data)
 
-        bot.send_message(chat_id, f'\n{message_text}', parse_mode='HTML')
+
+        bot.send_message(chat_id, f'\n{message_text}\n', parse_mode='HTML')
         bot.send_message(chat_id, f'Выбери функционал', reply_markup=show_tutor_kb())
 
 
@@ -95,11 +99,12 @@ def change_week_tutor(bot):
 
         register = bot.send_message(chat_id, f'{message_text}', parse_mode='HTML', reply_markup=show_tutor_kb())
 
-        bot.register_next_step_handler(message, change_week_tutor)
+        bot.register_next_step_handler(message, handle_change_week)
 
 
 
-    def change_week_tutor(message):
+    def handle_change_week(message):
+
         week = message.text
 
         query = '''
@@ -107,26 +112,25 @@ def change_week_tutor(bot):
                       FROM tutor
                       WHERE group_id = ? and week = ?
                 '''
-
-
         try:
             cursor.execute(query, (group_id[0], week,))
             group_tutor_data = cursor.fetchall()
-            return group_tutor_data
+
         except sqlite3.ProgrammingError:
-            bot.send_message(message.chat.id, f'Ошибка!')
-        if group_tutor_data:
-            for data in group_tutor_data:
+           cursor.execute(query, (group_id[0], week,))
+           group_tutor_data = cursor.fetchall()
+
+        for data in group_tutor_data:
                 message_text = f''
                 cleaned_data = ''.join(data).strip("()'")
                 message_text += f'<code>{cleaned_data}</code>\n'.format(data)
-                bot.send_message(message.chat.id, f'Неделя : <blockquote>{week}</blockquote>\nДаты занятий:\n<code>{cleaned_data}</code>',
+                bot.send_message(message.chat.id, f'Неделя 2 : <blockquote>{week}</blockquote>\nДаты занятий:\n<code>{cleaned_data}</code>',
                                  parse_mode="HTML", reply_markup=show_tutor_kb())
-        else:
-            bot.send_message(message.chat.id, f'Такой недели нет')
+
 
 def change_group_tutor(bot):
     @bot.callback_query_handler(func=lambda call: call.data in ['change_group_tutor'])
     def handle_change_group(call):
         message = call.message
-        bot.send_message(message.chat.id, f'Выбери группу', reply_markup= show_tutor_kb_buttons())
+        bot.send_message(message.chat.id, f'Выбери группу', reply_markup=show_tutor_kb_buttons())
+

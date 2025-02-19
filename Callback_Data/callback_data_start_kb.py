@@ -31,9 +31,9 @@ def register_callback_start(bot):
 
 def passworld(message):
 
-    if message.from_user.id == 1077710198 and message.text == '123123':
+    if message.from_user.id == 1077710198 or message.from_user.id == 435756947 and message.text == '123123':
     # if message.text == '123123':
-        bot.send_message(message.chat.id, f'Вы зашли в качесве преподавателя препода Влада'
+        bot.send_message(message.chat.id, f'Вы зашли в качесве преподавателя препода '
                                           f'Выбери группу', reply_markup=show_tutor_kb_buttons())
         print(f'Был произведен вход за влада'
               f'{message.from_user.id}')
@@ -47,6 +47,7 @@ def passworld(message):
 
         print(f'Был произведен вход за главного админа'
               f'{message.from_user.id}')
+
     else:
 
         bot.send_message(message.chat.id, f'Вы не препод',
@@ -76,7 +77,7 @@ def register_callback_student(bot):
                 bot.send_message(message.chat.id, f'Вы вернулись в главное меню', reply_markup = show_start_kb())
 
 def register_callback_groups(bot):
-    # TODO bug
+
     @bot.callback_query_handler(func=lambda call: call.data in ['miit', '1273'])
     def wrapped_bot_send_message(call):
         print(f'вызвана wrapped')
