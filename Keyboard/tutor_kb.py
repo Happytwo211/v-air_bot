@@ -9,16 +9,15 @@ def show_tutor_kb_buttons():
 
 def show_tutor_kb():
     inline_kb_tutor = types.InlineKeyboardMarkup(row_width=1)
-    inline_kb_tutor_button_1 = types.InlineKeyboardButton('Отметить посещаемость',
-                                                          callback_data='attendance')
-    inline_kb_tutor_button_2 = types.InlineKeyboardButton('Получить материалы',
-                                                          callback_data='materials')
+    # inline_kb_tutor_button_1 = types.InlineKeyboardButton('Отметить посещаемость',
+    #                                                       callback_data='attendance')
+    # inline_kb_tutor_button_2 = types.InlineKeyboardButton('Получить материалы',
+    #                                                       callback_data='materials')
     inline_kb_tutor_button_3 = types.InlineKeyboardButton('Поменять неделю', callback_data='change_week_tutor')
 
     inline_kb_tutor_button_4 = types.InlineKeyboardButton(f'Поменять группу', callback_data='change_group_tutor')
 
-    inline_kb_tutor.add(inline_kb_tutor_button_1,
-                        inline_kb_tutor_button_2, inline_kb_tutor_button_3,
+    inline_kb_tutor.add( inline_kb_tutor_button_3,
                         inline_kb_tutor_button_4)
     return inline_kb_tutor
 

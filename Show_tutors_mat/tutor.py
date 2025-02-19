@@ -46,9 +46,8 @@ def register_tutor(bot):
               WHERE group_id = ? and date BETWEEN ? AND ?
               '''
 
-
-        print(group_id)
         cursor.execute(query, (group_id[0], start_of_week, end_of_week))
+        print('group_id=', group_id)
         group_tutor_data = cursor.fetchall()
         print(group_tutor_data)
 
@@ -57,7 +56,7 @@ def register_tutor(bot):
         end_of_week_str= str(end_of_week)
 
         message_text = (
-                        f'\nНеделя 1: <blockquote>{start_of_week_str[8:]}.{start_of_week_str[5:7]}-{end_of_week_str[8:]}.{end_of_week_str[5:7]}</blockquote>\nДаты занятий:\n'
+                        f'\nНеделя: <blockquote>{start_of_week_str[8:]}.{start_of_week_str[5:7]}-{end_of_week_str[8:]}.{end_of_week_str[5:7]}</blockquote>\nДаты занятий:\n'
 
         )
 
@@ -65,9 +64,18 @@ def register_tutor(bot):
             cleaned_data = ''.join(data).strip("()'")
             message_text += f'<code>{cleaned_data}</code>\n'.format(data)
 
+        # bot.send_message(chat_id, f'\n{message_text}\n', parse_mode='HTML')
+        # bot.send_message(chat_id, f'Выбери функционал', reply_markup=show_tutor_kb())
+        if group_tutor_data:
 
-        bot.send_message(chat_id, f'\n{message_text}\n', parse_mode='HTML')
-        bot.send_message(chat_id, f'Выбери функционал', reply_markup=show_tutor_kb())
+            bot.send_message(chat_id, f'\n{message_text}\n', parse_mode='HTML')
+            bot.send_message(chat_id, f'Выбери функционал', reply_markup=show_tutor_kb())
+
+        else:
+            bot.send_message(chat_id, f'\n{message_text}\n'
+                                      f'<i>На этой неделе занятий нет</i>', parse_mode='HTML')
+            bot.send_message(chat_id, f'Выбери функционал', reply_markup=show_tutor_kb())
+
 
 
 
@@ -124,7 +132,7 @@ def change_week_tutor(bot):
                 message_text = f''
                 cleaned_data = ''.join(data).strip("()'")
                 message_text += f'<code>{cleaned_data}</code>\n'.format(data)
-                bot.send_message(message.chat.id, f'Неделя 2 : <blockquote>{week}</blockquote>\nДаты занятий:\n<code>{cleaned_data}</code>',
+                bot.send_message(message.chat.id, f'Неделя  : <blockquote>{week}</blockquote>\nДаты занятий:\n<code>{cleaned_data}</code>',
                                  parse_mode="HTML", reply_markup=show_tutor_kb())
 
 
