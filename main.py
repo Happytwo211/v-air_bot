@@ -3,7 +3,7 @@
 import telebot
 # from Show_tutors_mat.show_tutor_materials import register_tutor
 from Show_tutors_mat.tutor import register_tutor_group_id, register_tutor, change_week_tutor, change_group_tutor
-from Commands.start import register_start
+from Commands.start import register_start, test_11
 from Admins import admin_list
 from TOKEN import Token
 from Callback_Data.callback_data_start_kb import (register_callback_start,
@@ -28,7 +28,7 @@ admins = admin_list.admin_id
 
 #commands
 register_start(bot)
-
+test_11(bot)
 
 #Обработчики сообщений
 register_callback_start(bot)

@@ -142,6 +142,9 @@ def change_week_tutor(bot):
                 bot.send_message(message.chat.id, f'Неделя  : <blockquote>{week}</blockquote>\nДаты занятий:\n<code>{cleaned_data}</code>',
                                  parse_mode="HTML", reply_markup=show_tutor_kb())
 
+        #test
+        bot.register_next_step_handler(message, show_group_by_date(message))
+
 
 def change_group_tutor(bot):
     @bot.callback_query_handler(func=lambda call: call.data in ['change_group_tutor'])
@@ -149,3 +152,34 @@ def change_group_tutor(bot):
         message = call.message
         bot.send_message(message.chat.id, f'Выбери группу', reply_markup=show_tutor_kb_buttons())
 
+
+
+####TEST######
+
+def show_group_by_date(message):
+    pattern = r'\d{4}-\d{2}-\d{2}'
+    match = re.match(pattern, message.text)
+
+    if match:
+        query = '''
+                              SELECT student_name 
+                              FROM tutor
+                              WHERE group_id = ? and date = ?
+                        '''
+        cursor.execute(query, (group_id[0], message.text,))
+        data = cursor.fetchall()
+
+        bot.send_message(message.chat.id, f'{data}>')
+        #                     reply_markup=show_tutor_kb())
+        # for data in data:
+        #         message_text = f''
+        #         cleaned_data = ''.join(data).strip("()'")
+        #         message_text += f'<code>{cleaned_data}</code>\n'.format(data)
+        #         bot.send_message(message.chat.id, f'{cleaned_data}>',
+        #                     reply_markup=show_tutor_kb())
+
+    else:
+
+        pass
+
+    return
