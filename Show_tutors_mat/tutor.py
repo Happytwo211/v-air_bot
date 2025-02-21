@@ -51,7 +51,7 @@ def register_tutor(bot):
         group_tutor_data = cursor.fetchall()
         print(group_tutor_data)
 
-        #test
+
         start_of_week_str = str(start_of_week)
         end_of_week_str= str(end_of_week)
 
@@ -78,6 +78,10 @@ def register_tutor(bot):
 
 
 
+         #test
+        message = call.message
+        bot.send_message(chat_id, f'testimng, enter data')
+        bot.register_next_step_handler(message, show_group_by_date)
 
 def change_week_tutor(bot):
     @bot.callback_query_handler(func=lambda call: call.data in ['change_week_tutor'])
@@ -142,7 +146,7 @@ def change_week_tutor(bot):
                 bot.send_message(message.chat.id, f'Неделя  : <blockquote>{week}</blockquote>\nДаты занятий:\n<code>{cleaned_data}</code>',
                                  parse_mode="HTML", reply_markup=show_tutor_kb())
 
-        #test
+
         bot.register_next_step_handler(message, show_group_by_date(message))
 
 
@@ -154,7 +158,7 @@ def change_group_tutor(bot):
 
 
 
-####TEST######
+
 
 def show_group_by_date(message):
     pattern = r'\d{4}-\d{2}-\d{2}'
