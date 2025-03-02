@@ -80,8 +80,11 @@ def register_tutor(bot):
 
          #test
         message = call.message
-        bot.send_message(chat_id, f'testimng, enter data')
-        bot.register_next_step_handler(message, show_group_by_date)
+
+
+        test = bot.register_next_step_handler(message, show_group_by_date)
+        if test:
+            bot.send_message(chat_id,f'Cписок ващей группы:')
 
 def change_week_tutor(bot):
     @bot.callback_query_handler(func=lambda call: call.data in ['change_week_tutor'])
@@ -98,8 +101,12 @@ def change_week_tutor(bot):
                       WHERE group_id = ? 
                       
                       '''
-        cursor.execute(query, (group_id[0],))
-        group_tutor_data = cursor.fetchall()
+        try:
+            cursor.execute(query, (group_id[0],))
+            group_tutor_data = cursor.fetchall()
+
+        except NameError:
+            group_id_tutor(call)
 
 
         message_text = (f'\nДоступные недели')
@@ -138,13 +145,18 @@ def change_week_tutor(bot):
         except sqlite3.ProgrammingError:
            cursor.execute(query, (group_id[0], week,))
            group_tutor_data = cursor.fetchall()
+        # finally:
 
         for data in group_tutor_data:
+            try:
                 message_text = f''
                 cleaned_data = ''.join(data).strip("()'")
                 message_text += f'<code>{cleaned_data}</code>\n'.format(data)
                 bot.send_message(message.chat.id, f'Неделя  : <blockquote>{week}</blockquote>\nДаты занятий:\n<code>{cleaned_data}</code>',
                                  parse_mode="HTML", reply_markup=show_tutor_kb())
+            except TypeError:
+                print('test type error')
+                bot.send_message(message.chat.id, f'{group_tutor_data}')
 
 
         bot.register_next_step_handler(message, show_group_by_date(message))
