@@ -16,8 +16,9 @@ def show_tutor_kb():
     inline_kb_tutor_button_3 = types.InlineKeyboardButton('Поменять неделю', callback_data='change_week_tutor')
 
     inline_kb_tutor_button_4 = types.InlineKeyboardButton(f'Поменять группу', callback_data='change_group_tutor')
+    inline_kb_tutor_button_5 = types.InlineKeyboardButton(f'Выбрать дату', callback_data='date')
 
     inline_kb_tutor.add( inline_kb_tutor_button_3,
-                        inline_kb_tutor_button_4)
+                        inline_kb_tutor_button_4, inline_kb_tutor_button_5)
     return inline_kb_tutor
 
